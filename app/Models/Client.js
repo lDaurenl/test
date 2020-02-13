@@ -85,11 +85,11 @@ class Client extends Model {
   }
 
   regAddress() {
-    this.address().where('type', 'Reg')
+   return  this.address().where('type', 'Reg')
   }
 
   livingAddress() {
-    this.address().where('type', 'Liv')
+   return  this.address().where('type', 'Liv')
   }
 
   address() {
@@ -138,20 +138,46 @@ class Client extends Model {
       client[property] = clientObj[property];
     }
     await client.save();
-    return this.createOrUpdateClient(clientObj, client)
+    return this.createNestedModels(clientObj, client)
   }
 
-  static async Update(client, clientObj) {
-    if (clientObj.children !== undefined) {
+  static async Update(client, Obj) {
+    if (await this.IsExistObject(Obj, Client)) {
+      return null
+    }
+    for (let property of this.getInputProperties()) {
+      client[property] = Obj[property];
+    }
+    if (Obj.children !== undefined) {
      await client.children().delete()
     }
-    if(clientObj.jobs!==undefined){
+    if(Obj.jobs!==undefined){
       await client.jobs().delete()
     }
-
+    client.save();
+  return this.updateNestedModels(Obj,client)
   }
-
-  static async createOrUpdateClient(Obj, client) {
+  static async updateNestedModels(Obj,client){
+    let passportObj = Obj.passport;
+    passportObj.scope = Obj.scope;
+    let passport=await client.passport().load();
+    passport = await PassportModel.UpdatePassport(passportObj,passport);
+    if (passport == null) {
+      return null;
+    }
+    let liv=await client.livingAddress().load();
+    let reg=await client.regAddress().load();
+    liv=liv['rows'][0];
+    reg=reg['rows'][0];
+    await AddressModel.updateAddress(Obj.regAddress, 'Reg', client.id,liv);
+    await AddressModel.updateAddress(Obj.livingAddress, 'Liv', client.id,reg);
+    await JobModel.createJobs(Obj.jobs, client.id);
+    await ChildModel.createChildren(Obj.children, client.id);
+    passport.idClient = client.id;
+    await passport.save();
+    return client;
+  }
+  static async createNestedModels(Obj, client) {
     let passportObj = Obj.passport;
     passportObj.scope = Obj.scope;
     let passport = await PassportModel.createPassport(PassportModel);
@@ -167,5 +193,5 @@ class Client extends Model {
     await passport.save();
     return client;
   }
-}//допилить id
+}
 module.exports = Client;

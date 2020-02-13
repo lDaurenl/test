@@ -24,11 +24,13 @@ class AddressClient extends Model {
   }
 
   static async createAddress(obj,type,idClient) {
+    let address = new AddressClient();
+    this.updateAddress(obj,type,idClient,address)
+  }
+  static async updateAddress(obj,type,idClient,address){
     if (await this.IsExistObject(obj, AddressClient)) {
       return null
     }
-    let address = new AddressClient();
-    this.IsExistObject(obj, AddressClient);
     for (let property of this.getInputProperties()) {
       address[property] = obj[property];
     }

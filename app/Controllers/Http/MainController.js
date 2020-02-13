@@ -45,11 +45,11 @@ class MainController {
 
   async update({request, params, response}) {
     let client = await ClientModel.find(await params.id);
-    let clientObj = request.input('client');
+    let clientObj = JSON.parse(request.input('client'));
     if (client == null) {
       return response.status(404).send('нет клиента с таким id')
     }
-    return CreateModel.UpdateClient(client, clientObj);
+    return ClientModel.Update(client,clientObj);
   }
 }
 
