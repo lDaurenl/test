@@ -144,7 +144,7 @@ class Client extends Model {
       this.fillRegAddress(obj.regAddress, this.regAddress())
     }
     if (obj.livingAddress) {
-      this.fillLivAddress(obj.passport, this.passport())
+      this.fillLivAddress(obj.livingAddress, this.passport())
     }
   }
 
@@ -186,6 +186,7 @@ class Client extends Model {
   async fillJobs(jobs) {
     for (let jobObj of jobs) {
       let jobInfo = Job.getJobInfo(jobObj)
+      console.log(jobObj);
       let job = await this.jobs()
         .create(jobInfo)
       let addressInfo = Address.getAddressInfo(jobObj.address)
@@ -205,7 +206,7 @@ class Client extends Model {
     }
   }
 
-  async fillLivAddress(address, model) {
+  async fillLivAddress(address, model=null) {
     const livingAddress = Address.getAddressInfo(address)
     if (model) {
       await this.livingAddress()
@@ -214,6 +215,7 @@ class Client extends Model {
       await this.livingAddress()
         .create(livingAddress)
     }
+    console.log(livingAddress)
   }
 
   async fillChildren(children) {
