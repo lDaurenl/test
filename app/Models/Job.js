@@ -1,27 +1,25 @@
-'use strict';
-const Model = require('./InformagicModel');
-const Enum = require('./enum');
-const Address = use('App/Models/AddressJob');
+const Model = require('./InformagicModel')
+const Enum = require('./enum')
 
 class Job extends Model {
-  static _typesWork = new Enum('type', ['main', 'pluralistically', 'owner / participant']);
+  static _typesWork = new Enum('type', ['main', 'pluralistically', 'owner / participant'])
 
   static boot() {
-    super.boot();
+    super.boot()
     this.addHook('beforeDelete', 'DeleteHook.jobs')
   }
 
   setPhoneNumbers(phoneNumbers) {
-    return JSON.stringify(phoneNumbers);
+    return JSON.stringify(phoneNumbers)
   }
 
   getPhoneNumbers(phoneNumbers) {
-    return JSON.parse(phoneNumbers);
+    return JSON.parse(phoneNumbers)
   }
 
-  address() {
-    return this.hasOne('App/Models/AddressJob', 'id', 'idJob');
-  }
+  // address() {
+  //   return this.hasOne('App/Models/AddressJob', 'id', 'idJob')
+  // }
 
   static getInputProperties() {
     return ['id',
@@ -37,36 +35,21 @@ class Job extends Model {
       'site']
   }
 
-  static getKeyProperties() {
-    return ['id']
-  }
-
   static getTypesWork() {
     return this._typesWork
   }
 
-  static async createJobs(jobs, idClient) {
-    for (let job of jobs) {
-      await this.createJob(job, idClient)
-    }
+  static get traits() {
+    return ['@provider:Morphable']
   }
 
-  static async createJob(jobObj, idClient) {
-    let job = new Job();
-    let addressObj = jobObj.address;
-    let address = await Address.createAddress(addressObj);
-    if (await this.IsExistObject(jobObj, Job)) {
-      return null
-    }
-    for (let property of this.getInputProperties()) {
-      job[property] = jobObj[property];
-    }
-    job.idClient = idClient;
-    await job.save();
-    address.idJob = job.id;
-    await address.save();
-    return job;
+  address() {
+    return this.morphOne('App/Models/Address', 'id', 'idOwner', 'type', 'Job')
+  }
+
+  static getJobInfo(obj) {
+    return this.getInfo(obj)
   }
 }
 
-module.exports = Job;
+module.exports = Job

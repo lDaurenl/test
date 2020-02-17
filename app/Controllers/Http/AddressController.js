@@ -1,5 +1,5 @@
 'use strict';
-const AddressModel = use('App/Models/AddressJob');
+const AddressModel = use('App/Models/Address');
 
 class AddressController {
   async index({response}) {

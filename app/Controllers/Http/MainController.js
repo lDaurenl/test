@@ -1,56 +1,75 @@
-'use strict';
-const ClientModel = use('App/Models/Client');
+'use strict'
+
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const Client = use('App/Models/Client')
+
 
 class MainController {
-  async index({request}) {
+  async index({ request }) {
 
-    let sortBy = request.input('sortBy');
-    sortBy = sortBy == null ? 'created_at' : sortBy;
-    let sortDir = request.input('sortDir');
-    sortDir = sortDir == null ? 'desc' : sortDir;
-    let page = request.input('page');
-    page = page == null ? 1 : page;
-    let limit = request.input('limit');
-    limit = limit == null ? 10 : limit;
-    return ClientModel.query().orderBy(sortBy, sortDir).paginate(page, limit);
+    let sortBy = request.input('sortBy')
+    sortBy = sortBy == null ? 'created_at' : sortBy
+    let sortDir = request.input('sortDir')
+    sortDir = sortDir == null ? 'desc' : sortDir
+    let page = request.input('page')
+    page = page == null ? 1 : page
+    let limit = request.input('limit')
+    limit = limit == null ? 10 : limit
+    return Client.query()
+      .orderBy(sortBy, sortDir)
+      .paginate(page, limit)
   }
 
-  async store({request,response}) {
-    let clientObj = JSON.parse(request.input('client'));
-    let client = await ClientModel.createClient(clientObj);
-    if(client==null){
-      return response.status(404).send('клиент с таким паспортом или ключевыми ' +
-        'полями: ${Client.getKeyProperties()}' )
+  async store({ request, response }) {
+    const clientObj = JSON.parse(request.input('client'))
+    const client = this.createClient(clientObj)
+
+    const spouseObj = clientObj.spouse
+    if (spouseObj) {
+      spouseObj.spouse = client.id
+      this.createClient(spouseObj)
     }
-    let spouseObj = clientObj.spouse;
-    return client;
+
+    return client
   }
 
-  async show({request, params, response}) {
-    let client = await ClientModel.find(await params.id);
+  async show({ request, params, response }) {
+    let client = await Client.find(await params.id)
     if (client == null) {
-      return response.status(404).send('нет клиента с таким id')
+      return response.status(404)
+        .send('нет клиента с таким id')
     }
 
-    return client;
+    return client
   }
-  async destroy({request, params, response}) {
-    let client = await ClientModel.find(await params.id);
+
+  async destroy({ request, params, response }) {
+    let client = await Client.find(await params.id)
     if (client == null) {
-      return response.status(404).send('нет клиента с таким id')
+      return response.status(404)
+        .send('нет клиента с таким id')
     }
-    client.delete();
+    client.delete()
     return 'удалено'
   }
 
-  async update({request, params, response}) {
-    let client = await ClientModel.find(await params.id);
-    let clientObj = JSON.parse(request.input('client'));
+  async update({ request, params, response }) {
+    let client = await Client.find(await params.id)
+    let clientObj = JSON.parse(request.input('client'))
     if (client == null) {
-      return response.status(404).send('нет клиента с таким id')
+      return response.status(404)
+        .send('нет клиента с таким id')
     }
-    return ClientModel.Update(client,clientObj);
+    return Client.Update(client, clientObj)
   }
+
+//создание клиента и заполнение
+  async createClient(clientObj) {
+    let clientInfo = Client.getClientInfo(clientObj)
+    let client = await Client.create(clientInfo)
+    await client.fillClient(clientObj)
+  }
+
 }
 
-module.exports = MainController;
+module.exports = MainController

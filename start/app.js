@@ -18,6 +18,7 @@ const providers = [
   '@adonisjs/cors/providers/CorsProvider',
   '@adonisjs/shield/providers/ShieldProvider',
   '@adonisjs/session/providers/SessionProvider',
+  'adonis-lucid-polymorphic/providers/PolymorphicProvider',
   '@adonisjs/auth/providers/AuthProvider'
 ]
 

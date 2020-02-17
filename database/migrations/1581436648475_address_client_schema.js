@@ -2,17 +2,17 @@
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema');
-const Address=use('App/Models/AddressClient');
+const Address=use('App/Models/Address');
 const type=Address.getType();
 class AddressClientSchema extends Schema {
   up () {
-    this.create('addressClients', (table) => {
+    this.create('address', (table) => {
       table.uuid('id').primary();
       table.string('country');
       table.string('zipCode');
       table.string('region');
-      table.enu(type.Signature,type.ArrayTypes);
-      table.uuid('idClient').references().inTable('clients');
+      table.string('type');
+      table.uuid('idOwner');
       table.string('city');
       table.string('street');
       table.string('house');
@@ -23,7 +23,7 @@ class AddressClientSchema extends Schema {
   }
 
   down () {
-    this.drop('addressClients')
+    this.drop('address')
   }
 }
 
