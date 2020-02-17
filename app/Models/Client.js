@@ -133,7 +133,38 @@ class Client extends Model {
     return JSON.stringify(files)
   }
 
-  async fillClient(obj){
+  async updateClient(obj) {
+    this.updateJobs(obj.jobs)
+    this.updateChildren(obj.children)
+
+    if (obj.passport) {
+      this.fillPassport(obj.passport, this.passport())
+    }
+    if (obj.regAddress) {
+      this.fillRegAddress(obj.regAddress, this.regAddress())
+    }
+    if (obj.livingAddress) {
+      this.fillLivAddress(obj.passport, this.passport())
+    }
+  }
+
+  async updateChildren(children) {
+    if (children) {
+      this.children()
+        .delete()
+      this.fillChildren(children)
+    }
+  }
+
+  async updateJobs(jobs) {
+    if (jobs) {
+      this.jobs()
+        .delete()
+      this.fillJobs(jobs)
+    }
+  }
+
+  async fillClient(obj) {
     this.fillPassport(obj.passport)
     this.fillJobs(obj.jobs)
     this.fillRegAddress(obj.regAddress)
@@ -141,10 +172,15 @@ class Client extends Model {
     this.fillChildren(obj.children)
   }
 
-  async fillPassport(passport) {
+  async fillPassport(passport, model) {
     const passportObj = Passport.getPassportInfo(passport)
-    await this.passport()
-      .create(passportObj)
+    if (model) {
+      await this.passport()
+        .update(passportObj)
+    } else {
+      await this.passport()
+        .create(passportObj)
+    }
   }
 
   async fillJobs(jobs) {
@@ -158,19 +194,30 @@ class Client extends Model {
     }
   }
 
-  async fillRegAddress(address) {
+  async fillRegAddress(address, model) {
     const regAddress = Address.getAddressInfo(address)
-    await this.regAddress()
-      .create(regAddress)
+    if (model) {
+      await this.regAddress()
+        .update(regAddress)
+    } else {
+      await this.regAddress()
+        .create(regAddress)
+    }
   }
 
-  async fillLivAddress(address) {
+  async fillLivAddress(address, model) {
     const livingAddress = Address.getAddressInfo(address)
-    await this.livingAddress()
-      .create(livingAddress)
+    if (model) {
+      await this.livingAddress()
+        .update(livingAddress)
+    } else {
+      await this.livingAddress()
+        .create(livingAddress)
+    }
   }
+
   async fillChildren(children) {
-    const childrenObj = Child.getChildrenInfo(clientObj.children)
+    const childrenObj = Child.getChildrenInfo(children)
     await this.children()
       .createMany(children)
   }

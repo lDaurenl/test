@@ -60,7 +60,7 @@ class MainController {
       return response.status(404)
         .send('нет клиента с таким id')
     }
-    return Client.Update(client, clientObj)
+
   }
 
 //создание клиента и заполнение
@@ -68,6 +68,13 @@ class MainController {
     let clientInfo = Client.getClientInfo(clientObj)
     let client = await Client.create(clientInfo)
     await client.fillClient(clientObj)
+    return client;
+  }
+  async updateClient(clientObj,client){
+    let clientInfo = Client.getClientInfo(clientObj)
+    client.update(clientInfo)
+    await client.updateClient(clientObj,client)
+    return client;
   }
 
 }
