@@ -16,6 +16,7 @@ const rules = {
   tin:'string',
   status:'status',
   regAddress:'address',
+  jobs:'jobs',
   // typeEducation:'string',
   // maritalStatus:'string',
   // generalExp:`exists, ${Client.getKeyProperties}`,

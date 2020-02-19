@@ -111,7 +111,9 @@ class Client extends Model {
 
 
   getDocuments(documents) {
-    return (documents)? JSON.parse(documents):null;
+    if (documents) {
+      return JSON.parse(documents)
+    }
   }
 
   setDocuments(documents) {
@@ -119,7 +121,9 @@ class Client extends Model {
   }
 
   getCommunications(communications) {
-    return (communications)? JSON.parse(communications):null
+    if (communications) {
+      return JSON.parse(communications)
+    }
   }
 
   setCommunications(communications) {
@@ -127,8 +131,9 @@ class Client extends Model {
   }
 
   getFiles(files) {
-
-    return (files)? JSON.parse(files):null
+    if (files) {
+      return JSON.parse(files)
+    }
   }
 
   setFiles(files) {
