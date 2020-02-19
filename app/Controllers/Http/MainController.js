@@ -12,9 +12,7 @@ class MainController {
     const sortDir = request.input('sortDir', 'desc')
     const page = request.input('page', 1)
     const limit = request.input('limit', 10)
-    return Client.query()
-      .orderBy(sortBy, sortDir)
-      .paginate(page, limit)
+    return Client.find("f4537137-9669-438b-8b13-700643b734e1")
   }
 
   async store({ request, response }) {
@@ -24,13 +22,12 @@ class MainController {
       throw new Exception(validation.messages(), 409)
     }
     const client = await this.createClient(clientObj)
-
     const spouseObj = clientObj.spouse
     if (spouseObj) {
       spouseObj.spouse = client.id
-      this.createClient(spouseObj)
+      const spouse= await this.createClient(spouseObj)
     }
-
+    console.log('sad')
     return client
   }
 
