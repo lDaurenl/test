@@ -5,6 +5,7 @@ const Schema = use('Schema')
 
 class PassportsSchema extends Schema {
   up () {
+
     this.create('passports', (table) => {
       table.uuid('id').primary();
       table.string('series');

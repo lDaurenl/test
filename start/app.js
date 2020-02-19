@@ -19,6 +19,7 @@ const providers = [
   '@adonisjs/shield/providers/ShieldProvider',
   '@adonisjs/session/providers/SessionProvider',
   'adonis-lucid-polymorphic/providers/PolymorphicProvider',
+  '@adonisjs/validator/providers/ValidatorProvider',
   '@adonisjs/auth/providers/AuthProvider'
 ]
 

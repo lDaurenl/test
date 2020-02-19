@@ -6,6 +6,8 @@ const TypesWork=JobModel.getTypesWork();
 
 class JobsSchema extends Schema {
   up () {
+
+
     this.create('jobs', (table) => {
       table.uuid('id');
       table.enu(TypesWork.Signature,TypesWork.ArrayTypes);

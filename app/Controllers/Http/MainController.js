@@ -2,19 +2,40 @@
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Client = use('App/Models/Client')
-
+const { validate } = use('Validator')
+const Exception = use('App/Exceptions/ValidationException')
+const rules = {
+  surname:'string',
+  name:'string',
+  patronymic:'string',
+  nameChange:'boolean',
+  dob:'date',
+  children:'children',
+  citizenship:'string',
+  snils:'string',
+  tin:'string',
+  status:'status',
+  regAddress:'address',
+  // typeEducation:'string',
+  // maritalStatus:'string',
+  // generalExp:`exists, ${Client.getKeyProperties}`,
+  // curWorkExp:'string',
+  // curFieldExp:'string',
+  // typeEmp:'Enum',
+  monIncome:'number',
+  monExpenses:'number',
+  // files:'string',
+  // documents:'string',
+  // communications:'string',
+}
 
 class MainController {
   async index({ request }) {
 
-    let sortBy = request.input('sortBy')
-    sortBy = sortBy == null ? 'created_at' : sortBy
-    let sortDir = request.input('sortDir')
-    sortDir = sortDir == null ? 'desc' : sortDir
-    let page = request.input('page')
-    page = page == null ? 1 : page
-    let limit = request.input('limit')
-    limit = limit == null ? 10 : limit
+    const sortBy = request.input('sortBy', 'created_at')
+    const sortDir = request.input('sortDir', 'desc')
+    const page = request.input('page', 1)
+    const limit = request.input('limit', 10)
     return Client.query()
       .orderBy(sortBy, sortDir)
       .paginate(page, limit)
@@ -22,8 +43,11 @@ class MainController {
 
   async store({ request, response }) {
     const clientObj = JSON.parse(request.input('client'))
-    const client = this.createClient(clientObj)
-
+    const validation = await validate(clientObj, rules)
+    if (validation.fails()) {
+      throw new Exception(validation.messages(), 409)
+    }
+    const client = await this.createClient(clientObj)
     const spouseObj = clientObj.spouse
     if (spouseObj) {
       spouseObj.spouse = client.id
@@ -63,18 +87,18 @@ class MainController {
 
   }
 
-//создание клиента и заполнение
   async createClient(clientObj) {
-    let clientInfo = Client.getClientInfo(clientObj)
+    let clientInfo = await Client.getClientInfo(clientObj)
     let client = await Client.create(clientInfo)
     await client.fillClient(clientObj)
-    return client;
+    return client
   }
-  async updateClient(clientObj,client){
-    let clientInfo = Client.getClientInfo(clientObj)
+
+  async updateClient(clientObj, client) {
+    let clientInfo = await Client.getClientInfo(clientObj)
     client.update(clientInfo)
-    await client.updateClient(clientObj,client)
-    return client;
+    await client.updateClient(clientObj, client)
+    return client
   }
 
 }

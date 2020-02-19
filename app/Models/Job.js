@@ -22,7 +22,8 @@ class Job extends Model {
   // }
 
   static getInputProperties() {
-    return ['id',
+    return [
+      'id',
       'dateEmp',
       'dateDismissal',
       'companyName',
@@ -32,7 +33,8 @@ class Job extends Model {
       'monIncome',
       'fioManager',
       'phoneNumbers',
-      'site']
+      'site'
+    ]
   }
 
   static getTypesWork() {

@@ -6,7 +6,7 @@ const Enum = require('./enum')
 
 class Address extends Model {
   static get table() {
-    return 'Address'
+    return 'address'
   }
 
   static _type = new Enum('type', ['Reg', 'Liv', 'Job'])

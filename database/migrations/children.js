@@ -6,7 +6,7 @@ const Schema = use('Schema');
 class ChildrenSchema extends Schema {
   up() {
     this.create('children', (table) => {
-      table.uuid('id').primary();
+      table.uuid('id').primary().defaultTo(this.db.raw('public.gen_random_uuid()'));
       table.string('surname');
       table.string('name');
       table.string('patronymic');

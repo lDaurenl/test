@@ -2,7 +2,7 @@
 
 const Model = require('./InformagicModel')
 const Enum = require('./enum')
-
+let c = 1
 const Address = use('App/Models/Address')
 const Passport = use('App/Models/Passport')
 const Job = use('App/Models/Job')
@@ -60,6 +60,7 @@ class Client extends Model {
       'citizenship',
       'snils',
       'tin',
+      'status',
       'typeEducation',
       'maritalStatus',
       'generalExp',
@@ -109,24 +110,25 @@ class Client extends Model {
   }
 
 
-  getDocuments() {
-    return JSON.parse(this.documents)
+  getDocuments(documents) {
+    return (documents)? JSON.parse(documents):null;
   }
 
   setDocuments(documents) {
-    this.documents = JSON.stringify(documents)
+    return JSON.stringify(documents)
   }
 
-  getCommunications() {
-    return JSON.parse(this.communications)
+  getCommunications(communications) {
+    return (communications)? JSON.parse(communications):null
   }
 
   setCommunications(communications) {
-    this.communications = JSON.stringify(communications)
+    return JSON.stringify(communications)
   }
 
   getFiles(files) {
-    return JSON.parse(files)
+
+    return (files)? JSON.parse(files):null
   }
 
   setFiles(files) {
@@ -166,9 +168,9 @@ class Client extends Model {
 
   async fillClient(obj) {
     this.fillPassport(obj.passport)
+    this.fillLivAddress(obj.livingAddress)
     this.fillJobs(obj.jobs)
     this.fillRegAddress(obj.regAddress)
-    this.livingAddress(obj.livingAddress)
     this.fillChildren(obj.children)
   }
 
@@ -186,9 +188,11 @@ class Client extends Model {
   async fillJobs(jobs) {
     for (let jobObj of jobs) {
       let jobInfo = Job.getJobInfo(jobObj)
-      console.log(jobObj);
       let job = await this.jobs()
         .create(jobInfo)
+      if (Object.keys(jobObj.address).length == 0) {
+        continue
+      }
       let addressInfo = Address.getAddressInfo(jobObj.address)
       await job.address()
         .create(addressInfo)
@@ -206,8 +210,9 @@ class Client extends Model {
     }
   }
 
-  async fillLivAddress(address, model=null) {
+  async fillLivAddress(address, model = null) {
     const livingAddress = Address.getAddressInfo(address)
+    this.livingAddress(livingAddress)
     if (model) {
       await this.livingAddress()
         .update(livingAddress)
@@ -215,7 +220,6 @@ class Client extends Model {
       await this.livingAddress()
         .create(livingAddress)
     }
-    console.log(livingAddress)
   }
 
   async fillChildren(children) {

@@ -11,17 +11,19 @@ class InformagicModel extends Model {
   static get primaryKey() {
     return 'id'
   }
-
-  static boot() {
-    super.boot()
-    // хук для генерации id
-    this.addHook('beforeCreate', 'UuidHook.uuid')
-  }
-
   // метод который дожен возвращать массив свойств,которые нужно вводить
   // Пользователю конкретно для этой модели,без вложенных моделей
   static getInputProperties() {
     throw new Error(`вы не переопределили getInputProperties для модели: ${this.toString()}`)
+  }
+  static boot () {
+    super.boot()
+
+    /**
+     * A hook to hash the user password before saving
+     * it to the database.
+     */
+    this.addHook('beforeCreate','UuidHook.uuid')
   }
 
   //метод который возвращает обьект с вводимыми полями
