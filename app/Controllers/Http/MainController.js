@@ -4,18 +4,22 @@
 const Client = use('App/Models/Client')
 const { validate } = use('Validator')
 const Exception = use('App/Exceptions/ValidationException')
+const ClientTransformer = use('App/Transformers/ClientTransformer')
 
 class MainController {
-  async index({ request }) {
+  async index({ request,transform }) {
 
     const sortBy = request.input('sortBy', 'created_at')
     const sortDir = request.input('sortDir', 'desc')
     const page = request.input('page', 1)
     const limit = request.input('limit', 10)
-    return Client.find("f4537137-9669-438b-8b13-700643b734e1")
+    const clients=await Client.query()
+      .orderBy(sortBy, sortDir)
+      .paginate(page, limit);
+    return transform.paginate(clients,'ClientTransformer')
   }
 
-  async store({ request, response }) {
+  async store({ request, transform }) {
     const clientObj = JSON.parse(request.input('client'))
     const validation = await validate(clientObj, Client.getRulesValidate())
     if (validation.fails()) {
@@ -28,7 +32,7 @@ class MainController {
       const spouse= await this.createClient(spouseObj)
     }
     console.log('sad')
-    return client
+    return transform.item(client, 'ClientTransformer')
   }
 
   async show({ request, params, response }) {

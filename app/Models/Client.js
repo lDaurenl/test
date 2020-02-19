@@ -69,7 +69,6 @@ class Client extends Model {
       'typeEmp',
       'monIncome',
       'monExpenses',
-      'scope',
       'files',
       'documents',
       'communications'
@@ -109,34 +108,12 @@ class Client extends Model {
     return this.morphOne('App/Models/Address', 'id', 'idOwner', 'type', 'Liv')
   }
 
-
-  getDocuments(documents) {
-    if (typeof documents=='string') {
-      return JSON.parse(documents)
-    }
-    return documents;
-  }
-
   setDocuments(documents) {
     return JSON.stringify(documents)
   }
 
-  getCommunications(communications) {
-    if (typeof communications=='string') {
-      return JSON.parse(communications)
-    }
-    return communications;
-  }
-
   setCommunications(communications) {
     return JSON.stringify(communications)
-  }
-
-  getFiles(files) {
-    if (typeof files=='string') {
-      return JSON.parse(files)
-    }
-    return files;
   }
 
   setFiles(files) {

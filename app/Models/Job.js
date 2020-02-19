@@ -12,11 +12,6 @@ class Job extends Model {
   setPhoneNumbers(phoneNumbers) {
     return JSON.stringify(phoneNumbers)
   }
-
-  getPhoneNumbers(phoneNumbers) {
-    return JSON.parse(phoneNumbers)
-  }
-
   // address() {
   //   return this.hasOne('App/Models/AddressJob', 'id', 'idJob')
   // }
@@ -54,7 +49,6 @@ class Job extends Model {
   }
   static getRulesValidate(){
     return {
-      id: 'string',
       dateEmp: 'date',
       dateDismissal: 'date',
       companyName: 'string',

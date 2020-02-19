@@ -41,7 +41,6 @@ class ClientsSchema extends Schema {
       table.enu(TypesEmp.Signature, TypesEmp.ArrayTypes)
       table.bigInteger('monIncome')
       table.bigInteger('monExpenses')
-      table.json('scope')
       table.json('files')
       table.json('documents')
       table.timestamps()

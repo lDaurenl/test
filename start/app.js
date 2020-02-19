@@ -20,6 +20,7 @@ const providers = [
   '@adonisjs/session/providers/SessionProvider',
   'adonis-lucid-polymorphic/providers/PolymorphicProvider',
   '@adonisjs/validator/providers/ValidatorProvider',
+  'adonis-bumblebee/providers/BumblebeeProvider',
   '@adonisjs/auth/providers/AuthProvider'
 ]
 
@@ -33,7 +34,8 @@ const providers = [
 |
 */
 const aceProviders = [
-  '@adonisjs/lucid/providers/MigrationsProvider'
+  '@adonisjs/lucid/providers/MigrationsProvider',
+  'adonis-bumblebee/providers/CommandsProvider'
 ]
 
 /*
