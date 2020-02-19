@@ -24,6 +24,7 @@ class MainController {
       throw new Exception(validation.messages(), 409)
     }
     const client = await this.createClient(clientObj)
+
     const spouseObj = clientObj.spouse
     if (spouseObj) {
       spouseObj.spouse = client.id

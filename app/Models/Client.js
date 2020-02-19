@@ -237,6 +237,12 @@ class Client extends Model {
   }
 
   static getRulesValidate() {
+    const spouseRules = this.getRulesValidateSpouse()
+    spouseRules.spouse = 'spouse'
+    return spouseRules
+  }
+
+  static getRulesValidateSpouse() {
     return {
       surname: 'string',
       name: 'string',
@@ -259,7 +265,7 @@ class Client extends Model {
       typeEmp: 'typeEmp',
       monIncome: 'number',
       monExpenses: 'number',
-      passport:'passport',
+      passport: 'passport',
       files: 'arrayUUID',
       documents: 'arrayUUID',
       communications: 'arrayUUID'
