@@ -16,13 +16,14 @@ const rules = {
   tin:'string',
   status:'status',
   regAddress:'address',
+  livingAddress:'address',
   jobs:'jobs',
-  // typeEducation:'string',
-  // maritalStatus:'string',
-  // generalExp:`exists, ${Client.getKeyProperties}`,
-  // curWorkExp:'string',
-  // curFieldExp:'string',
-  // typeEmp:'Enum',
+  typeEducation:'typeEducation',
+  maritalStatus:'maritalStatus',
+  generalExp:'number',
+  curWorkExp:'number',
+  curFieldExp:'number',
+  typeEmp:'typeEmp',
   monIncome:'number',
   monExpenses:'number',
   // files:'string',
@@ -44,7 +45,7 @@ class MainController {
 
   async store({ request, response }) {
     const clientObj = JSON.parse(request.input('client'))
-    const validation = await validate(clientObj, rules)
+    const validation = await validate(clientObj, Client.getRulesValidate())
     if (validation.fails()) {
       throw new Exception(validation.messages(), 409)
     }

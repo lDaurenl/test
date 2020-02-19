@@ -2,7 +2,6 @@ const { hooks } = require('@adonisjs/ignitor')
 
 hooks.after.providersBooted(() => {
   const Validator = use('Validator')
-  const Exception = use('App/Exceptions/ValidationException')
   const Client = use('App/Models/Client')
   const Job=use('App/Models/Job')
   const Address=use('App/Models/Address')
@@ -37,7 +36,7 @@ hooks.after.providersBooted(() => {
     return enums(data, field, message, args, get, statuses)
   }
   const typeEducation = async (data, field, message, args, get) => {
-    const typesEducation = Client.getTypesEmp()
+    const typesEducation = Client.getTypesEducation()
     return enums(data, field, message, args, get, typesEducation)
   }
   const maritalStatus = async (data, field, message, args, get) => {
