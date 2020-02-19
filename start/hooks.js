@@ -6,10 +6,12 @@ hooks.after.providersBooted(() => {
   const Job = use('App/Models/Job')
   const Address = use('App/Models/Address')
   const Child = use('App/Models/Child')
+  const Passport = use('App/Models/Passport')
 
   const addressRules = Address.getRulesValidate()
   const childRules = Child.getRulesValidate()
   const jobsRules = Job.getRulesValidate()
+  const passportRules = Passport.getRulesValidate()
 
   const uuidReg = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
 
@@ -78,7 +80,7 @@ hooks.after.providersBooted(() => {
       }
     }
   }
-  const ArrayUUID = async (data, field, message, args, get) => {
+  const arrayUUID = async (data, field, message, args, get) => {
     const value = get(data, field)
     if (!value) {
       return
@@ -88,6 +90,9 @@ hooks.after.providersBooted(() => {
         throw message
       }
     }
+  }
+  const passport = async (data, field, message, args, get) => {
+    return modelValidate(data, field, message, args, get, passportRules)
   }
 
 
@@ -99,5 +104,6 @@ hooks.after.providersBooted(() => {
   Validator.extend('typeEducation', typeEducation)
   Validator.extend('maritalStatus', maritalStatus)
   Validator.extend('typeEmp', typeEmp)
-  Validator.extend('ArrayUUID', ArrayUUID)
+  Validator.extend('arrayUUID', arrayUUID)
+  Validator.extend('passport',passport)
 })

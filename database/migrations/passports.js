@@ -11,10 +11,9 @@ class PassportsSchema extends Schema {
       table.string('series');
       table.string('number');
       table.string('giver');
-      // table.uuid('birthPlace').references('id').inTable('address');
       table.date('dateIssued');
       table.uuid('idClient').references('id').inTable('clients').onDelete('cascade').onUpdate('cascade');
-      table.json('scope');
+      table.string('birthPlace')
       table.timestamps()
     })
   }

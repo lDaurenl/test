@@ -195,7 +195,7 @@ class Client extends Model {
       let jobInfo = Job.getJobInfo(jobObj)
       let job = await this.jobs()
         .create(jobInfo)
-      if (Object.keys(jobObj.address).length == 0) {
+      if (!jobObj.address) {
         continue
       }
       let addressInfo = Address.getAddressInfo(jobObj.address)
@@ -217,7 +217,6 @@ class Client extends Model {
 
   async fillLivAddress(address, model = null) {
     const livingAddress = Address.getAddressInfo(address)
-    this.livingAddress(livingAddress)
     if (model) {
       await this.livingAddress()
         .update(livingAddress)
@@ -230,7 +229,7 @@ class Client extends Model {
   async fillChildren(children) {
     const childrenObj = Child.getChildrenInfo(children)
     await this.children()
-      .createMany(children)
+      .createMany(childrenObj)
   }
 
   static getClientInfo(obj) {
@@ -260,9 +259,10 @@ class Client extends Model {
       typeEmp: 'typeEmp',
       monIncome: 'number',
       monExpenses: 'number',
-      files: 'ArrayUUID',
-      documents: 'ArrayUUID',
-      communications: 'ArrayUUID'
+      passport:'passport',
+      files: 'arrayUUID',
+      documents: 'arrayUUID',
+      communications: 'arrayUUID'
     }
   }
 }
