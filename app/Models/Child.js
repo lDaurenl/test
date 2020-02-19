@@ -19,6 +19,14 @@ class Child extends Model {
   static  getChildInfo(obj) {
     return this.getInfo(obj);
   }
+  static getRulesValidate(){
+    return {
+      surname: 'string',
+      name: 'string',
+      patronymic: 'string',
+      dob: 'date'
+    }
+  }
 }
 
 module.exports = Child;

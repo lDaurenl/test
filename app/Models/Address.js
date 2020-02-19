@@ -22,6 +22,18 @@ class Address extends Model {
   static getAddressInfo(obj) {
     return this.getInfo(obj)
   }
+
+  static getRulesValidate() {
+    return {
+      zipCode: 'string',
+      region: 'string',
+      city: 'string',
+      street: 'string',
+      house: 'string',
+      block: 'string',
+      apartment: 'string'
+    }
+  }
 }
 
 module.exports = Address

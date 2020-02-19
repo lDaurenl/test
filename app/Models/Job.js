@@ -52,6 +52,22 @@ class Job extends Model {
   static getJobInfo(obj) {
     return this.getInfo(obj)
   }
+  static getRulesValidate(){
+    return {
+      id: 'string',
+      dateEmp: 'date',
+      dateDismissal: 'date',
+      companyName: 'string',
+      tin: 'string',
+      type: 'typeJob',
+      jobTitle: 'string',
+      monIncome: 'number',
+      fioManager: 'string',
+      address: 'address',
+      site: 'string'
+    }
+  }
+
 }
 
 module.exports = Job
