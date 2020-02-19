@@ -28,11 +28,11 @@ class MainController {
     const client = await this.createClient(clientObj)
     const spouseObj = clientObj.spouse
     if (spouseObj) {
-      spouseObj.spouse = client.id
       const spouse= await this.createClient(spouseObj)
+      spouse.spouse=client.id;
+     await spouse.save()
     }
-    console.log('sad')
-    return transform.item(client, 'ClientTransformer')
+    return transform.item(client, 'ClientTransformer.withSpouse')
   }
 
   async show({ request, params, response }) {
