@@ -236,32 +236,33 @@ class Client extends Model {
   static getClientInfo(obj) {
     return this.getInfo(obj)
   }
-  static getRulesValidate(){
-    return  {
-      surname:'string',
-      name:'string',
-      patronymic:'string',
-      nameChange:'boolean',
-      dob:'date',
-      children:'children',
-      citizenship:'string',
-      snils:'string',
-      tin:'string',
-      status:'status',
-      regAddress:'address',
-      livingAddress:'address',
-      jobs:'jobs',
-      typeEducation:'typeEducation',
-      maritalStatus:'maritalStatus',
-      generalExp:'number',
-      curWorkExp:'number',
-      curFieldExp:'number',
-      typeEmp:'typeEmp',
-      monIncome:'number',
-      monExpenses:'number',
-      // files:'string',
-      // documents:'string',
-      // communications:'string',
+
+  static getRulesValidate() {
+    return {
+      surname: 'string',
+      name: 'string',
+      patronymic: 'string',
+      nameChange: 'boolean',
+      dob: 'date',
+      children: 'children',
+      citizenship: 'string',
+      snils: 'string',
+      tin: 'string',
+      status: 'status',
+      regAddress: 'address',
+      livingAddress: 'address',
+      jobs: 'jobs',
+      typeEducation: 'typeEducation',
+      maritalStatus: 'maritalStatus',
+      generalExp: 'number',
+      curWorkExp: 'number',
+      curFieldExp: 'number',
+      typeEmp: 'typeEmp',
+      monIncome: 'number',
+      monExpenses: 'number',
+      files: 'ArrayUUID',
+      documents: 'ArrayUUID',
+      communications: 'ArrayUUID'
     }
   }
 }

@@ -4,32 +4,6 @@
 const Client = use('App/Models/Client')
 const { validate } = use('Validator')
 const Exception = use('App/Exceptions/ValidationException')
-const rules = {
-  surname:'string',
-  name:'string',
-  patronymic:'string',
-  nameChange:'boolean',
-  dob:'date',
-  children:'children',
-  citizenship:'string',
-  snils:'string',
-  tin:'string',
-  status:'status',
-  regAddress:'address',
-  livingAddress:'address',
-  jobs:'jobs',
-  typeEducation:'typeEducation',
-  maritalStatus:'maritalStatus',
-  generalExp:'number',
-  curWorkExp:'number',
-  curFieldExp:'number',
-  typeEmp:'typeEmp',
-  monIncome:'number',
-  monExpenses:'number',
-  // files:'string',
-  // documents:'string',
-  // communications:'string',
-}
 
 class MainController {
   async index({ request }) {

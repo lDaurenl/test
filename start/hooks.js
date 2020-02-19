@@ -3,23 +3,28 @@ const { hooks } = require('@adonisjs/ignitor')
 hooks.after.providersBooted(() => {
   const Validator = use('Validator')
   const Client = use('App/Models/Client')
-  const Job=use('App/Models/Job')
-  const Address=use('App/Models/Address')
-  const Child=use('App/Models/Child')
+  const Job = use('App/Models/Job')
+  const Address = use('App/Models/Address')
+  const Child = use('App/Models/Child')
 
-  const addressRules = Address.getRulesValidate();
+  const addressRules = Address.getRulesValidate()
   const childRules = Child.getRulesValidate()
   const jobsRules = Job.getRulesValidate()
 
-  const modelValidate = async (data, field, message, args, get,rules) => {
+  const uuidReg = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+
+  const modelValidate = async (data, field, message, args, get, rules) => {
     const value = get(data, field)
     if (!value) {
       return
     }
-    const validation = await Validator.validate(value,rules)
+    const validation = await Validator.validate(value, rules)
     if (validation.fails()) {
       throw message
     }
+  }
+  const isUUIDv4 = async (uuid) => {
+    return uuidReg.test(uuid)
   }
   const enums = async (data, field, message, args, get, enums) => {
     const value = get(data, field)
@@ -48,20 +53,20 @@ hooks.after.providersBooted(() => {
     return enums(data, field, message, args, get, typesEmp)
   }
   const typeJob = async (data, field, message, args, get) => {
-    const typeJob =Job.getTypesWork();
+    const typeJob = Job.getTypesWork()
     return enums(data, field, message, args, get, typeJob)
   }
   const address = async (data, field, message, args, get) => {
-  return modelValidate(data, field, message, args, get,addressRules)
-    }
+    return modelValidate(data, field, message, args, get, addressRules)
+  }
 
   const children = async (data, field, message, args, get) => {
-    return modelsValidate(data, field, message, args, get,childRules)
+    return modelsValidate(data, field, message, args, get, childRules)
   }
   const jobs = async (data, field, message, args, get) => {
-    return modelsValidate(data, field, message, args, get,jobsRules)
+    return modelsValidate(data, field, message, args, get, jobsRules)
   }
-  const modelsValidate = async (data, field, message, args, get,rules) => {
+  const modelsValidate = async (data, field, message, args, get, rules) => {
     const value = get(data, field)
     if (!value) {
       return
@@ -73,6 +78,17 @@ hooks.after.providersBooted(() => {
       }
     }
   }
+  const ArrayUUID = async (data, field, message, args, get) => {
+    const value = get(data, field)
+    if (!value) {
+      return
+    }
+    for (const uuid of value) {
+      if (!await isUUIDv4(uuid)) {
+        throw message
+      }
+    }
+  }
 
 
   Validator.extend('status', status)
@@ -80,7 +96,8 @@ hooks.after.providersBooted(() => {
   Validator.extend('children', children)
   Validator.extend('typeJob', typeJob)
   Validator.extend('jobs', jobs)
-  Validator.extend('typeEducation',typeEducation)
-  Validator.extend('maritalStatus',maritalStatus)
-  Validator.extend('typeEmp',typeEmp)
+  Validator.extend('typeEducation', typeEducation)
+  Validator.extend('maritalStatus', maritalStatus)
+  Validator.extend('typeEmp', typeEmp)
+  Validator.extend('ArrayUUID', ArrayUUID)
 })
