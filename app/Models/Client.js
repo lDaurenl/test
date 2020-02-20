@@ -27,6 +27,7 @@ class Client extends Model {
     'employee', 'iE',
     'owner/co-owner', 'retiree', 'unemployed'
   ])
+  static _typeContact=new Enum('typeContact',['email','value'])
 
   static getStatuses() {
     return this._statuses

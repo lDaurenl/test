@@ -46,24 +46,26 @@ class MainController {
     return transform.item(client, 'ClientTransformer')
   }
 
-  async destroy({ request, params, response }) {
-    let client = await Client.find(await params.id)
-    if (client == null) {
-      return response.status(404)
-        .send('нет клиента с таким id')
+  async destroy({params}) {
+    const validation = await validate(params,RudRules )
+    if (validation.fails()) {
+      throw new Exception(validation.messages(), 409)
     }
+    const client=Client.find(params.id).load()
     client.delete()
     return 'удалено'
   }
 
-  async update({ request, params, response }) {
-    let client = await Client.find(await params.id)
-    let clientObj = JSON.parse(request.input('client'))
-    if (client == null) {
-      return response.status(404)
-        .send('нет клиента с таким id')
+  async update({ request, params, transform }) {
+    const validation = await validate(params,RudRules )
+    if (validation.fails()) {
+      throw new Exception(validation.messages(), 409)
     }
-
+    const clientObj = JSON.parse(request.input('client'))
+    let client=Client.find(params.id).load();
+    this.updateClient(clientObj,client)
+    client=Client.find(client.id)
+    return transform.item(client, 'ClientTransformer')
   }
 
   async createClient(clientObj) {

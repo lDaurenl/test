@@ -31,13 +31,37 @@ hooks.after.providersBooted(() => {
     if (!value) {
       return
     }
-    if(!await isUUIDv4(value)){
+    if (!await isUUIDv4(value)) {
       throw message
     }
   }
   const isUUIDv4 = async (uuid) => {
     return uuidReg.test(uuid)
   }
+  const IsPhone = async (phone) => {
+    const regExp = /^\+?\d+$/
+    return regExp.test(phone)
+  }
+  const IsEmail = async (email) => {
+    const regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return regExp.test(String(email)
+      .toLowerCase())
+  }
+  const communications = async (data, field, message, args, get) => {
+    const value = get(data, field)
+    if (!value) {
+      return
+    }
+    for (const communication in communications) {
+      if (communication.type == 'email' && await IsEmail(communication.value) ||
+        communication.type == 'phone' && await IsPhone(communication.value)) {
+        continue
+      } else {
+        throw message
+      }
+    }
+  }
+
   const enums = async (data, field, message, args, get, enums) => {
     const value = get(data, field)
     if (!value) {
@@ -109,8 +133,8 @@ hooks.after.providersBooted(() => {
     if (!value) {
       return
     }
-    if(!Client.find(value)){
-      throw message;
+    if (!Client.find(value)) {
+      throw message
     }
   }
   const passport = async (data, field, message, args, get) => {
@@ -129,6 +153,7 @@ hooks.after.providersBooted(() => {
   Validator.extend('arrayUUID', arrayUUID)
   Validator.extend('passport', passport)
   Validator.extend('spouse', spouse)
-  Validator.extend('existClient',existClient)
-  Validator.extend('UUID',UUIDv4)
+  Validator.extend('existClient', existClient)
+  Validator.extend('UUID', UUIDv4)
+  Validator.extend('communications',communications)
 })
