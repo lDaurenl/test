@@ -49,7 +49,7 @@ class ClientTransformer extends BumblebeeTransformer {
   }
   async transformWithSpouse(model){
     return {
-      ...this.transform(model),
+      ...await this.transform(model),
       spouse: await this.transform(await model.spouse().load())
     }
   }

@@ -2,7 +2,6 @@
 
 const Model = require('./InformagicModel')
 const Enum = require('./enum')
-let c = 1
 const Address = use('App/Models/Address')
 const Passport = use('App/Models/Passport')
 const Job = use('App/Models/Job')
@@ -28,10 +27,6 @@ class Client extends Model {
     'employee', 'iE',
     'owner/co-owner', 'retiree', 'unemployed'
   ])
-
-  static getKeyProperties() {
-    return ['scope']
-  }
 
   static getStatuses() {
     return this._statuses
@@ -107,7 +102,6 @@ class Client extends Model {
   livingAddress() {
     return this.morphOne('App/Models/Address', 'id', 'idOwner', 'type', 'Liv')
   }
-
   setDocuments(documents) {
     return JSON.stringify(documents)
   }

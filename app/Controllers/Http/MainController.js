@@ -7,16 +7,16 @@ const Exception = use('App/Exceptions/ValidationException')
 const ClientTransformer = use('App/Transformers/ClientTransformer')
 
 class MainController {
-  async index({ request,transform }) {
+  async index({ request, transform }) {
 
     const sortBy = request.input('sortBy', 'created_at')
     const sortDir = request.input('sortDir', 'desc')
     const page = request.input('page', 1)
     const limit = request.input('limit', 10)
-    const clients=await Client.query()
+    const clients = await Client.query()
       .orderBy(sortBy, sortDir)
-      .paginate(page, limit);
-    return transform.paginate(clients,'ClientTransformer')
+      .paginate(page, limit)
+    return transform.paginate(clients, 'ClientTransformer')
   }
 
   async store({ request, transform }) {
@@ -25,13 +25,14 @@ class MainController {
     if (validation.fails()) {
       throw new Exception(validation.messages(), 409)
     }
-    const client = await this.createClient(clientObj)
+    let client = await this.createClient(clientObj)
     const spouseObj = clientObj.spouse
     if (spouseObj) {
-      const spouse= await this.createClient(spouseObj)
-      spouse.spouse=client.id;
-     await spouse.save()
+      const spouse = await this.createClient(spouseObj)
+      spouse.merge({ spouse: client.id })
+      await spouse.save()
     }
+    client=Client.find(client.id)
     return transform.item(client, 'ClientTransformer.withSpouse')
   }
 
