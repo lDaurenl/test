@@ -12,7 +12,7 @@ hooks.after.providersBooted(() => {
   const childRules = Child.getRulesValidate()
   const jobsRules = Job.getRulesValidate()
   const passportRules = Passport.getRulesValidate()
-  const spouseRules=Client.getRulesValidateSpouse()
+  const spouseRules = Client.getRulesValidateSpouse()
 
   const uuidReg = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
 
@@ -23,6 +23,15 @@ hooks.after.providersBooted(() => {
     }
     const validation = await Validator.validate(value, rules)
     if (validation.fails()) {
+      throw message
+    }
+  }
+  const UUIDv4 = async (data, field, message, args, get) => {
+    const value = get(data, field)
+    if (!value) {
+      return
+    }
+    if(!await isUUIDv4(value)){
       throw message
     }
   }
@@ -69,7 +78,7 @@ hooks.after.providersBooted(() => {
   const jobs = async (data, field, message, args, get) => {
     return modelsValidate(data, field, message, args, get, jobsRules)
   }
-  const spouse=async (data, field, message, args, get) => {
+  const spouse = async (data, field, message, args, get) => {
     return modelValidate(data, field, message, args, get, spouseRules)
   }
   const modelsValidate = async (data, field, message, args, get, rules) => {
@@ -95,6 +104,15 @@ hooks.after.providersBooted(() => {
       }
     }
   }
+  const existClient = async (data, field, message, args, get) => {
+    const value = get(data, field)
+    if (!value) {
+      return
+    }
+    if(!Client.find(value)){
+      throw message;
+    }
+  }
   const passport = async (data, field, message, args, get) => {
     return modelValidate(data, field, message, args, get, passportRules)
   }
@@ -109,6 +127,8 @@ hooks.after.providersBooted(() => {
   Validator.extend('maritalStatus', maritalStatus)
   Validator.extend('typeEmp', typeEmp)
   Validator.extend('arrayUUID', arrayUUID)
-  Validator.extend('passport',passport)
-  Validator.extend('spouse',spouse)
+  Validator.extend('passport', passport)
+  Validator.extend('spouse', spouse)
+  Validator.extend('existClient',existClient)
+  Validator.extend('UUID',UUIDv4)
 })

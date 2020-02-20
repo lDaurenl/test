@@ -4,7 +4,8 @@
 const Client = use('App/Models/Client')
 const { validate } = use('Validator')
 const Exception = use('App/Exceptions/ValidationException')
-const ClientTransformer = use('App/Transformers/ClientTransformer')
+
+const RudRules={id:'required|UUID|existClient'}
 
 class MainController {
   async index({ request, transform }) {
@@ -32,18 +33,17 @@ class MainController {
       spouse.merge({ spouse: client.id })
       await spouse.save()
     }
-    client=Client.find(client.id)
-    return transform.item(client, 'ClientTransformer.withSpouse')
+    client = Client.find(client.id)
+    return transform.item(client, 'ClientTransformer')
   }
 
-  async show({ request, params, response }) {
-    let client = await Client.find(await params.id)
-    if (client == null) {
-      return response.status(404)
-        .send('нет клиента с таким id')
+  async show({ params ,transform}) {
+    const validation = await validate(params,RudRules )
+    if (validation.fails()) {
+      throw new Exception(validation.messages(), 409)
     }
-
-    return client
+    let client = await Client.find(await params.id)
+    return transform.item(client, 'ClientTransformer')
   }
 
   async destroy({ request, params, response }) {

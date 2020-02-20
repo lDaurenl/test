@@ -31,6 +31,7 @@ Route.get('/Children','ChildrenController.index');
 Route.post('/Children','ChildrenController.store');
 
 Route.get('/client','MainController.index');
+Route.get('client/:id','MainController.show')
 Route.delete('client/:id','MainController.destroy');
 Route.patch('client/:id','MainController.update');
 Route.post('/client','MainController.store');
