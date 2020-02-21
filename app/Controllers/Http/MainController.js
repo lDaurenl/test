@@ -24,7 +24,7 @@ class MainController {
     const clientObj = JSON.parse(request.input('client'))
     const validation = await validate(clientObj, Client.getRulesValidate())
     if (validation.fails()) {
-      throw new Exception(validation.messages(), 409)
+      throw new Exception(validation.messages(), 400)
     }
     let client = await this.createClient(clientObj)
     const spouseObj = clientObj.spouse
@@ -40,7 +40,7 @@ class MainController {
   async show({ params ,transform}) {
     const validation = await validate(params,RudRules )
     if (validation.fails()) {
-      throw new Exception(validation.messages(), 409)
+      throw new Exception(validation.messages(), 409,'E_VALIDATE')
     }
     let client = await Client.find(await params.id)
     return transform.item(client, 'ClientTransformer')
