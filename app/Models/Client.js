@@ -47,6 +47,7 @@ class Client extends Model {
 
   static getInputProperties() {
     return [
+      'id',
       'surname',
       'name',
       'patronymic',

@@ -31,9 +31,8 @@ class MainController {
     if (spouseObj) {
       const spouse = await this.createClient(spouseObj)
       spouse.merge({ spouse: client.id })
-      await spouse.save()
     }
-    client = Client.find(client.id)
+    client = Client.find(client)
     return transform.item(client, 'ClientTransformer')
   }
 

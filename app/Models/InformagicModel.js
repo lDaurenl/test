@@ -16,15 +16,6 @@ class InformagicModel extends Model {
   static getInputProperties() {
     throw new Error(`вы не переопределили getInputProperties для модели: ${this.toString()}`)
   }
-  static boot () {
-    super.boot()
-
-    /**
-     * A hook to hash the user password before saving
-     * it to the database.
-     */
-    this.addHook('beforeCreate','UuidHook.uuid')
-  }
 
   //метод который возвращает обьект с вводимыми полями
   static getInfo(obj) {

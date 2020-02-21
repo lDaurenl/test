@@ -1,30 +1,36 @@
-'use strict';
+'use strict'
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema');
-const Address=use('App/Models/Address');
-const type=Address.getType();
+const Schema = use('Schema')
+const Address = use('App/Models/Address')
+const type = Address.getType()
+
 class AddressClientSchema extends Schema {
-  up () {
+  up() {
+    this.createExtensionIfNotExists('uuid-ossp');
+
     this.create('address', (table) => {
-      table.uuid('id').primary();
-      table.string('country');
-      table.string('zipCode');
-      table.string('region');
-      table.string('type');
-      table.uuid('idOwner');
-      table.string('city');
-      table.string('street');
-      table.string('house');
-      table.string('block');
-      table.string('apartment');
+      table.uuid('id')
+        .primary()
+        .unique()
+        .defaultTo(this.db.raw('public.gen_random_uuid()'))
+      table.string('country')
+      table.string('zipCode')
+      table.string('region')
+      table.string('type')
+      table.uuid('idOwner')
+      table.string('city')
+      table.string('street')
+      table.string('house')
+      table.string('block')
+      table.string('apartment')
       table.timestamps()
     })
   }
 
-  down () {
+  down() {
     this.drop('address')
   }
 }
 
-module.exports = AddressClientSchema;
+module.exports = AddressClientSchema

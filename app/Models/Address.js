@@ -16,7 +16,7 @@ class Address extends Model {
   }
 
   static getInputProperties() {
-    return ['zipCode', 'region', 'city', 'street', 'house', 'block', 'apartment']
+    return ['id','zipCode', 'region', 'city', 'street', 'house', 'block', 'apartment']
   }
 
   static getAddressInfo(obj) {

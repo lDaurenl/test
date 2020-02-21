@@ -4,7 +4,7 @@ const Model = require('./InformagicModel')
 
 class Passport extends Model {
   static getInputProperties() {
-    return ['series', 'number', 'giver', 'dateIssued','birthPlace']
+    return ['id','series', 'number', 'giver', 'dateIssued','birthPlace']
   }
 
   static getPassportInfo(obj) {

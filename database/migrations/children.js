@@ -5,8 +5,10 @@ const Schema = use('Schema');
 
 class ChildrenSchema extends Schema {
   up() {
+    this.createExtensionIfNotExists('uuid-ossp');
+
     this.create('children', (table) => {
-      table.uuid('id').primary().defaultTo(this.db.raw('public.gen_random_uuid()'));
+      table.uuid('id').primary().unique().defaultTo(this.db.raw('public.gen_random_uuid()'));
       table.string('surname');
       table.string('name');
       table.string('patronymic');

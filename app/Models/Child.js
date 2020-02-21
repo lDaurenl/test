@@ -5,7 +5,7 @@ const Model = require('./InformagicModel');
 
 class Child extends Model {
   static getInputProperties() {
-    return ['surname', 'name', 'patronymic', 'dob']
+    return ['id','surname', 'name', 'patronymic', 'dob']
   }
 
   static  getChildrenInfo(children) {
