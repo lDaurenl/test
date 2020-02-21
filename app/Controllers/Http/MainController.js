@@ -51,7 +51,8 @@ class MainController {
     if (validation.fails()) {
       throw new Exception(validation.messages(), 409)
     }
-    const client=Client.find(params.id).load()
+    const client=await Client.find(params.id);
+    client.spouse().delete();
     client.delete()
     return 'удалено'
   }
