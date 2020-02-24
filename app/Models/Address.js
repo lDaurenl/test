@@ -16,11 +16,29 @@ class Address extends Model {
   }
 
   static getInputProperties() {
-    return ['id','zipCode', 'region', 'city', 'street', 'house', 'block', 'apartment']
+    return [
+      // 'id',
+      'zipCode',
+      'region',
+      'city',
+      'street',
+      'house',
+      'block',
+      'apartment'
+    ]
   }
 
   static getAddressInfo(obj) {
     return this.getInfo(obj)
+  }
+
+  static async fillAddress(obj, relationship, model) {
+    let addressInfo = Address.getAddressInfo(obj)
+    if (model) {
+      await relationship.update(addressInfo)
+    } else {
+      await relationship.create(addressInfo)
+    }
   }
 
   static getRulesValidate() {

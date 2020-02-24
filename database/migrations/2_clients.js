@@ -13,10 +13,12 @@ const TypesEmp = ClientModel.getTypesEmp()
 class ClientsSchema extends Schema {
   up() {
     this.create('clients', (table) => {
-      this.createExtensionIfNotExists('uuid-ossp');
+      this.createExtensionIfNotExists('uuid-ossp')
 
       table.uuid('id')
-        .primary().unique().defaultTo(this.db.raw('public.gen_random_uuid()'))
+        .primary()
+        .unique()
+        // .defaultTo(this.db.raw('public.gen_random_uuid()'))
       table.enu(Statuses.Signature, Statuses.ArrayTypes)
       table.string('surname')
       table.string('name')

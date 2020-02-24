@@ -1,19 +1,14 @@
-'use strict'
+const { validate } = use('Validator')
 const Exception = use('App/Exceptions/ValidationException')
 
-const { validate } = use('Validator')
-
+const RudRules = { id: 'required|UUID|existClient' }
 
 class BaseHttpController {
-  async validate (request, rules) {
-    const validation = await validate(request.all(), rules)
-
+  async validate(object,rules) {
+    const validation = await validate(object, rules)
     if (validation.fails()) {
-      throw new Exception(validation.messages(), 409)
-    } else {
-      return true
+      throw new Exception(validation.messages(), 400)
     }
-
   }
 }
 

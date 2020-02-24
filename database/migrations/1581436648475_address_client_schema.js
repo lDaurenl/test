@@ -13,7 +13,7 @@ class AddressClientSchema extends Schema {
       table.uuid('id')
         .primary()
         .unique()
-        .defaultTo(this.db.raw('public.gen_random_uuid()'))
+        // .defaultTo(this.db.raw('public.gen_random_uuid()'))
       table.string('country')
       table.string('zipCode')
       table.string('region')

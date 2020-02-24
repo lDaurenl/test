@@ -27,7 +27,7 @@ class Client extends Model {
     'employee', 'iE',
     'owner/co-owner', 'retiree', 'unemployed'
   ])
-  static _typeContact=new Enum('typeContact',['email','value'])
+  static _typeContact = new Enum('typeContact', ['email', 'value'])
 
   static getStatuses() {
     return this._statuses
@@ -47,7 +47,7 @@ class Client extends Model {
 
   static getInputProperties() {
     return [
-      'id',
+      // 'id',
       'surname',
       'name',
       'patronymic',
@@ -104,6 +104,7 @@ class Client extends Model {
   livingAddress() {
     return this.morphOne('App/Models/Address', 'id', 'idOwner', 'type', 'Liv')
   }
+
   setDocuments(documents) {
     return JSON.stringify(documents)
   }
@@ -119,7 +120,6 @@ class Client extends Model {
   async updateClient(obj) {
     this.updateJobs(obj.jobs)
     this.updateChildren(obj.children)
-
     if (obj.passport) {
       this.fillPassport(obj.passport, this.passport())
     }
@@ -132,19 +132,11 @@ class Client extends Model {
   }
 
   async updateChildren(children) {
-    if (children) {
-      this.children()
-        .delete()
-      this.fillChildren(children)
-    }
+    Child.updateChildren(children)
   }
 
   async updateJobs(jobs) {
-    if (jobs) {
-      this.jobs()
-        .delete()
-      this.fillJobs(jobs)
-    }
+    await Job.updateJobs(jobs, this)
   }
 
   async fillClient(obj) {
@@ -156,56 +148,23 @@ class Client extends Model {
   }
 
   async fillPassport(passport, model) {
-    const passportObj = Passport.getPassportInfo(passport)
-    if (model) {
-      await this.passport()
-        .update(passportObj)
-    } else {
-      await this.passport()
-        .create(passportObj)
-    }
+    await Passport.fillPassport(passport, model, this)
   }
 
   async fillJobs(jobs) {
-    for (let jobObj of jobs) {
-      let jobInfo = Job.getJobInfo(jobObj)
-      let job = await this.jobs()
-        .create(jobInfo)
-      if (!jobObj.address) {
-        continue
-      }
-      let addressInfo = Address.getAddressInfo(jobObj.address)
-      await job.address()
-        .create(addressInfo)
-    }
+    await Job.fillJobs(jobs, this)
   }
 
   async fillRegAddress(address, model) {
-    const regAddress = Address.getAddressInfo(address)
-    if (model) {
-      await this.regAddress()
-        .update(regAddress)
-    } else {
-      await this.regAddress()
-        .create(regAddress)
-    }
+    await Address.fillAddress(address, this.regAddress(), model)
   }
 
-  async fillLivAddress(address, model = null) {
-    const livingAddress = Address.getAddressInfo(address)
-    if (model) {
-      await this.livingAddress()
-        .update(livingAddress)
-    } else {
-      await this.livingAddress()
-        .create(livingAddress)
-    }
+  async fillLivAddress(address, model) {
+    await Address.fillAddress(address, this.livingAddress(), model)
   }
 
   async fillChildren(children) {
-    const childrenObj = Child.getChildrenInfo(children)
-    await this.children()
-      .createMany(childrenObj)
+    await Child.fillChildren(children, this)
   }
 
   static getClientInfo(obj) {

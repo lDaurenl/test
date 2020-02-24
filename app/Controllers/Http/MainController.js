@@ -4,10 +4,11 @@
 const Client = use('App/Models/Client')
 const { validate } = use('Validator')
 const Exception = use('App/Exceptions/ValidationException')
+const BaseController=use('App/Controllers/Http/BaseController')
 
 const RudRules={id:'required|UUID|existClient'}
 
-class MainController {
+class MainController extends  BaseController{
   async index({ request, transform }) {
 
     const sortBy = request.input('sortBy', 'created_at')
@@ -22,34 +23,26 @@ class MainController {
 
   async store({ request, transform }) {
     const clientObj = JSON.parse(request.input('client'))
-    const validation = await validate(clientObj, Client.getRulesValidate())
-    if (validation.fails()) {
-      throw new Exception(validation.messages(), 400)
-    }
+    await this.validate(clientObj,Client.getRulesValidate())
     let client = await this.createClient(clientObj)
+    await client.reload()
     const spouseObj = clientObj.spouse
     if (spouseObj) {
       const spouse = await this.createClient(spouseObj)
       spouse.merge({ spouse: client.id })
+      spouse.save()
     }
-    client = Client.find(client)
     return transform.item(client, 'ClientTransformer')
   }
 
   async show({ params ,transform}) {
-    const validation = await validate(params,RudRules )
-    if (validation.fails()) {
-      throw new Exception(validation.messages(), 409,'E_VALIDATE')
-    }
+    await this.validate(params,RudRules)
     let client = await Client.find(await params.id)
-    return transform.item(client, 'ClientTransformer')
+    return transform.item(await client.reload(), 'ClientTransformer')
   }
 
   async destroy({params}) {
-    const validation = await validate(params,RudRules )
-    if (validation.fails()) {
-      throw new Exception(validation.messages(), 409)
-    }
+    await this.validate(params,RudRules)
     const client=await Client.find(params.id);
     client.spouse().delete();
     client.delete()
@@ -57,15 +50,11 @@ class MainController {
   }
 
   async update({ request, params, transform }) {
-    const validation = await validate(params,RudRules )
-    if (validation.fails()) {
-      throw new Exception(validation.messages(), 409)
-    }
+    await this.validate(params,RudRules)
     const clientObj = JSON.parse(request.input('client'))
     let client=Client.find(params.id).load();
     this.updateClient(clientObj,client)
-    client=Client.find(client.id)
-    return transform.item(client, 'ClientTransformer')
+    return transform.item(await client.reload(), 'ClientTransformer')
   }
 
   async createClient(clientObj) {

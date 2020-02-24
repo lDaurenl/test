@@ -11,6 +11,7 @@ class InformagicModel extends Model {
   static get primaryKey() {
     return 'id'
   }
+
   // метод который дожен возвращать массив свойств,которые нужно вводить
   // Пользователю конкретно для этой модели,без вложенных моделей
   static getInputProperties() {
@@ -24,6 +25,11 @@ class InformagicModel extends Model {
       model[key] = obj[key]
     }
     return model
+  }
+
+  static boot() {
+    super.boot()
+    this.addHook('beforeCreate', 'UuidHook.uuid')
   }
 }
 

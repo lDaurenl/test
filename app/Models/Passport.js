@@ -4,7 +4,14 @@ const Model = require('./InformagicModel')
 
 class Passport extends Model {
   static getInputProperties() {
-    return ['id','series', 'number', 'giver', 'dateIssued','birthPlace']
+    return [
+      // 'id',
+      'series',
+      'number',
+      'giver',
+      'dateIssued',
+      'birthPlace'
+    ]
   }
 
   static getPassportInfo(obj) {
@@ -12,12 +19,23 @@ class Passport extends Model {
   }
 
   static getRulesValidate() {
-    return{
-      series:'string',
-      number:'string',
-      giver:'string',
-      dateIssued:'date',
-      birthPlace:'string'
+    return {
+      series: 'string',
+      number: 'string',
+      giver: 'string',
+      dateIssued: 'date',
+      birthPlace: 'string'
+    }
+  }
+
+  static async fillPassport(passport, model, client) {
+    const passportObj = Passport.getPassportInfo(passport)
+    if (model) {
+      await client.passport()
+        .update(passportObj)
+    } else {
+      await client.passport()
+        .create(passportObj)
     }
   }
 }

@@ -1,4 +1,5 @@
 const Model = require('./InformagicModel')
+const Address = use('App/Models/Address')
 const Enum = require('./enum')
 
 class Job extends Model {
@@ -12,13 +13,10 @@ class Job extends Model {
   setPhoneNumbers(phoneNumbers) {
     return JSON.stringify(phoneNumbers)
   }
-  // address() {
-  //   return this.hasOne('App/Models/AddressJob', 'id', 'idJob')
-  // }
 
   static getInputProperties() {
     return [
-      'id',
+      // 'id',
       'dateEmp',
       'dateDismissal',
       'companyName',
@@ -47,7 +45,32 @@ class Job extends Model {
   static getJobInfo(obj) {
     return this.getInfo(obj)
   }
-  static getRulesValidate(){
+
+  static async fillJobs(jobs, client) {
+    for (let jobObj of jobs) {
+      this.fillJob(jobObj, client)
+    }
+  }
+
+  static async fillJob(jobObj, client) {
+    let jobInfo = Job.getJobInfo(jobObj)
+    let job = await client.jobs()
+      .create(jobInfo)
+    if (jobObj.address) {
+      await Address.fillAddress(job.address, job.address())
+    }
+    return job
+  }
+
+  static async updateJobs(jobs,client) {
+    if (jobs) {
+     await client.jobs()
+        .delete()
+     await client.fillJobs(jobs)
+    }
+  }
+
+  static getRulesValidate() {
     return {
       dateEmp: 'date',
       dateDismissal: 'date',
