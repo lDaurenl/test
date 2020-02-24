@@ -117,6 +117,10 @@ class Client extends Model {
     return JSON.stringify(files)
   }
 
+  /**
+   * принимает:обьект со всей информацией о клиенте
+   * делает:изменяет модель клиенат по информации из объекта
+   */
   async updateClient(obj) {
     this.updateJobs(obj.jobs)
     this.updateChildren(obj.children)
@@ -130,21 +134,28 @@ class Client extends Model {
       this.fillLivAddress(obj.livingAddress, this.passport())
     }
   }
-
-  async updateChildren(children) {
-    await Child.updateChildren(children)
-  }
-
-  async updateJobs(jobs) {
-    await Job.updateJobs(jobs, this)
-  }
-
+/**
+ *принимает: объект со всей информацией
+ * делает:заполняет все данные о клиенте
+ * создает,заполняет и привязывает вложенные модели
+ */
   async fillClient(obj) {
     this.fillPassport(obj.passport)
     this.fillLivAddress(obj.livingAddress)
     this.fillJobs(obj.jobs)
     this.fillRegAddress(obj.regAddress)
     this.fillChildren(obj.children)
+  }
+  /**
+   * сдеалано просто для удобства,
+   * чтобы можно было вызыват медоты из инстанса объкета
+   */
+  async updateChildren(children) {
+    await Child.updateChildren(children,this)
+  }
+
+  async updateJobs(jobs) {
+    await Job.updateJobs(jobs, this)
   }
 
   async fillPassport(passport, model) {

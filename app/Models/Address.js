@@ -31,7 +31,12 @@ class Address extends Model {
   static getAddressInfo(obj) {
     return this.getInfo(obj)
   }
-
+  /**
+   * принимает:обьект со всей информацией о адресе,
+   * отношение куда нужно добавить адрес
+   * и инстанс модели адреса,если она есть
+   * делает:создает или изменяет адресс по информации из объекта
+   */
   static async fillAddress(obj, relationship, model) {
     let addressInfo = Address.getAddressInfo(obj)
     if (model) {

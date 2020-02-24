@@ -56,14 +56,20 @@ class MainController extends  BaseController{
     this.updateClient(clientObj,client)
     return transform.item(await client.reload(), 'ClientTransformer')
   }
-
+/**
+ * принимает:обьект со всей информацией о клиенте
+ * возвращает:новый инстанс заполненной модели
+ */
   async createClient(clientObj) {
     let clientInfo = await Client.getClientInfo(clientObj)
     let client = await Client.create(clientInfo)
     await client.fillClient(clientObj)
     return client
   }
-
+  /**
+   * принимает:обьект со всей информацией о клиенте,инстанс модели
+   * возвращает:инстанс измененный модели
+   */
   async updateClient(clientObj, client) {
     let clientInfo = await Client.getClientInfo(clientObj)
     client.update(clientInfo)

@@ -29,6 +29,8 @@ class InformagicModel extends Model {
 
   static boot() {
     super.boot()
+    //хук для генерации uuid и трейт,
+    // чтобы можно было корректно валидировать модели
     this.addHook('beforeCreate', 'UuidHook.uuid')
     this.addTrait('RulesValidate')
   }

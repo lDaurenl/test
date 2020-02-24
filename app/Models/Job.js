@@ -45,13 +45,22 @@ class Job extends Model {
   static getJobInfo(obj) {
     return this.getInfo(obj)
   }
-
+  /**
+   * принимает:массив с подготовленной информацией для создания
+   * инстанса модели и клиента(инстанс модели) куда будут привязаны работы
+   * делает:создает и привязывает работы к клиенту
+   */
   static async fillJobs(jobs, client) {
     for (let jobObj of jobs) {
-      this.fillJob(jobObj, client)
+      await this.fillJob(jobObj, client)
     }
   }
-
+/**
+ * принимает:обьект с информацией о работе
+ * и инстанс модели клиента
+ * делает:создает инстанс модели работы
+ * с заполненной информацией
+ */
   static async fillJob(jobObj, client) {
     let jobInfo = Job.getJobInfo(jobObj)
     let job = await client.jobs()
@@ -61,7 +70,11 @@ class Job extends Model {
     }
     return job
   }
-
+  /**
+   * принимает:массив обьектов с  информацией для создания
+   * инстанса модели и клиента куда будут привязаны работы
+   * делает:удаляет старые работы,создает и  привязывает новые
+   */
   static async updateJobs(jobs,client) {
     if (jobs) {
      await client.jobs()
