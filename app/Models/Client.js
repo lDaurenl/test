@@ -140,11 +140,11 @@ class Client extends Model {
  * создает,заполняет и привязывает вложенные модели
  */
   async fillClient(obj) {
-    this.fillPassport(obj.passport)
-    this.fillLivAddress(obj.livingAddress)
-    this.fillJobs(obj.jobs)
-    this.fillRegAddress(obj.regAddress)
-    this.fillChildren(obj.children)
+   await this.fillPassport(obj.passport)
+   await this.fillLivAddress(obj.livingAddress)
+   await this.fillJobs(obj.jobs)
+   await this.fillRegAddress(obj.regAddress)
+   await this.fillChildren(obj.children)
   }
   /**
    * сдеалано просто для удобства,
@@ -159,22 +159,27 @@ class Client extends Model {
   }
 
   async fillPassport(passport, model) {
+    if(passport)
     await Passport.fillPassport(passport, model, this)
   }
 
   async fillJobs(jobs) {
+    if(jobs)
     await Job.fillJobs(jobs, this)
   }
 
   async fillRegAddress(address, model) {
+    if(address)
     await Address.fillAddress(address, this.regAddress(), model)
   }
 
   async fillLivAddress(address, model) {
+    if(address)
     await Address.fillAddress(address, this.livingAddress(), model)
   }
 
   async fillChildren(children) {
+    if(children)
     await Child.fillChildren(children, this)
   }
 

@@ -12,6 +12,7 @@ const SpouseTransformer = use('App/Transformers/SpouseTransformer')
 class ClientTransformer extends SpouseTransformer {
   static get defaultInclude() {
     return [
+      ...super.defaultInclude,
       'spouse'
     ]
   }

@@ -217,7 +217,8 @@ Models= {
       'status': 'lead'
     }
   },
-  ClientEmpty:{client: {}}
+  ClientEmpty:{client: {}},
+  ClientWrongValidate:{client: { "status": "lea" } }
 }
 module.exports=Models;
 
