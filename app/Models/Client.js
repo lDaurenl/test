@@ -132,7 +132,7 @@ class Client extends Model {
   }
 
   async updateChildren(children) {
-    Child.updateChildren(children)
+    await Child.updateChildren(children)
   }
 
   async updateJobs(jobs) {
@@ -169,42 +169,6 @@ class Client extends Model {
 
   static getClientInfo(obj) {
     return this.getInfo(obj)
-  }
-
-  static getRulesValidate() {
-    const spouseRules = this.getRulesValidateSpouse()
-    spouseRules.spouse = 'spouse'
-    return spouseRules
-  }
-
-  static getRulesValidateSpouse() {
-    return {
-      surname: 'string',
-      name: 'string',
-      patronymic: 'string',
-      nameChange: 'boolean',
-      dob: 'date',
-      children: 'children',
-      citizenship: 'string',
-      snils: 'string',
-      tin: 'string',
-      status: 'status',
-      regAddress: 'address',
-      livingAddress: 'address',
-      jobs: 'jobs',
-      typeEducation: 'typeEducation',
-      maritalStatus: 'maritalStatus',
-      generalExp: 'number',
-      curWorkExp: 'number',
-      curFieldExp: 'number',
-      typeEmp: 'typeEmp',
-      monIncome: 'number',
-      monExpenses: 'number',
-      passport: 'passport',
-      files: 'arrayUUID',
-      documents: 'arrayUUID',
-      communications: 'arrayUUID'
-    }
   }
 }
 

@@ -30,6 +30,7 @@ class InformagicModel extends Model {
   static boot() {
     super.boot()
     this.addHook('beforeCreate', 'UuidHook.uuid')
+    this.addTrait('RulesValidate')
   }
 }
 

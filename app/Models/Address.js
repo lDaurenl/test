@@ -40,18 +40,6 @@ class Address extends Model {
       await relationship.create(addressInfo)
     }
   }
-
-  static getRulesValidate() {
-    return {
-      zipCode: 'string',
-      region: 'string',
-      city: 'string',
-      street: 'string',
-      house: 'string',
-      block: 'string',
-      apartment: 'string'
-    }
-  }
 }
 
 module.exports = Address

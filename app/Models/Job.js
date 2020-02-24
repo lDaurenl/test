@@ -69,22 +69,6 @@ class Job extends Model {
      await client.fillJobs(jobs)
     }
   }
-
-  static getRulesValidate() {
-    return {
-      dateEmp: 'date',
-      dateDismissal: 'date',
-      companyName: 'string',
-      tin: 'string',
-      type: 'typeJob',
-      jobTitle: 'string',
-      monIncome: 'number',
-      fioManager: 'string',
-      address: 'address',
-      site: 'string'
-    }
-  }
-
 }
 
 module.exports = Job

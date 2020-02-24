@@ -30,7 +30,7 @@ class MainController extends  BaseController{
     if (spouseObj) {
       const spouse = await this.createClient(spouseObj)
       spouse.merge({ spouse: client.id })
-      spouse.save()
+      await spouse.save()
     }
     return transform.item(client, 'ClientTransformer')
   }

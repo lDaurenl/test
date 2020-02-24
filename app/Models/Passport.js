@@ -18,16 +18,6 @@ class Passport extends Model {
     return this.getInfo(obj)
   }
 
-  static getRulesValidate() {
-    return {
-      series: 'string',
-      number: 'string',
-      giver: 'string',
-      dateIssued: 'date',
-      birthPlace: 'string'
-    }
-  }
-
   static async fillPassport(passport, model, client) {
     const passportObj = Passport.getPassportInfo(passport)
     if (model) {

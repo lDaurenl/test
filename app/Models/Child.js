@@ -38,15 +38,6 @@ class Child extends Model {
       await model.fillChildren(children)
     }
   }
-
-  static getRulesValidate() {
-    return {
-      surname: 'string',
-      name: 'string',
-      patronymic: 'string',
-      dob: 'date'
-    }
-  }
 }
 
 module.exports = Child
