@@ -1,5 +1,5 @@
-Models={
-   Client :{
+Models= {
+  ClientFull: {
     'documents': [
       '046b6c7f-0b8a-43b9-b35d-6489e6daee91',
       '046b6c7f-0b8a-43b9-b35d-6489e6daee91'
@@ -216,5 +216,8 @@ Models={
       'curWorkExp': 1.4658129805029452,
       'status': 'lead'
     }
-  }
+  },
+  ClientEmpty:{client: {}}
 }
+module.exports=Models;
+

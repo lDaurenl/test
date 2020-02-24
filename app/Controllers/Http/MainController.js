@@ -22,11 +22,7 @@ class MainController extends  BaseController{
   }
 
   async store({ request, transform }) {
-    //в постмане не нашел ajson в форма дате,
-    // там отправляется так,только через row
-    //но в начале мы обсуждали про input/only/all,
-    //а они работают в с форм дата
-    const clientObj = JSON.parse(request.input('client'))
+    const clientObj =request.input('client')
     await this.validate(clientObj,Client.getRulesValidate())
     let client = await this.createClient(clientObj)
     await client.reload()
