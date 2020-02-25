@@ -119,9 +119,9 @@ class Client extends Model {
 
   /**
    * принимает:обьект со всей информацией о клиенте
-   * делает:изменяет модель клиенат по информации из объекта
+   * делает:изменяет вложенные модели
    */
-  async updateClient(obj) {
+  async updateNestedModels(obj) {
     await this.updateJobs(obj.jobs)
     await this.updateChildren(obj.children)
     if (obj.passport) {
@@ -134,11 +134,12 @@ class Client extends Model {
       await this.fillLivAddress(obj.livingAddress, this.passport())
     }
   }
+
   /**
    * принимает:обьект со всей информацией о клиенте
    * возвращает:новый инстанс заполненной модели
    */
-  static async create(clientObj,trx) {
+  static async createWithNesting(clientObj) {
     let clientInfo = await Client.getClientInfo(clientObj)
     let client = await Client.create(clientInfo)
     await client.fillClient(clientObj)
@@ -150,12 +151,23 @@ class Client extends Model {
     if (!spouse) return
     if (await this.spouse()
       .load()) {
-      spouse = await Client.updateClient(spouse)
+      spouse = await this.updateWithNesting(spouse)
     } else {
-      spouse = await Client.createClient(spouse)
+      spouse = await Client.createWithNesting(spouse)
     }
     spouse.merge({ spouse: this.id })
     await spouse.save()
+  }
+
+  /**
+   * принимает:обьект со всей информацией о клиенте,инстанс модели
+   * возвращает:инстанс измененный модели
+   */
+  async updateWithNesting(clientObj) {
+    const clientInfo = await Client.getClientInfo(clientObj)
+    await this.update(clientInfo)
+    await this.updateNestedModels(clientObj)
+    return this
   }
 
   /**

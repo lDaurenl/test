@@ -24,11 +24,11 @@ class MainController extends BaseController {
   async store({ request, transform }) {
     const clientObj = request.input('client')
     await this.validate(clientObj, Client.getRulesValidate())
-    let client = await Client.createClient(clientObj)
+    let client = await Client.createWithNesting(clientObj)
     await client.reload()
     const spouseObj = clientObj.spouse
     if (spouseObj) {
-      const spouse = await Client.createClient(spouseObj)
+      const spouse = await Client.createWithNesting(spouseObj)
       spouse.merge({ spouse: client.id })
       await spouse.save()
     }
@@ -54,24 +54,12 @@ class MainController extends BaseController {
     await this.validate(params, RudRules)
     const clientObj = request.input('client')
     const client = await Client.findOrFail(params.id)
-    await this.updateClient(clientObj, client)
+    await client.updateWithNesting(clientObj)
     const spouseObj = clientObj.spouse
     const spouse=await client.updateSpouse(spouseObj)
     await client.reload()
     return transform.item(client, 'ClientTransformer')
   }
-
-  /**
-   * принимает:обьект со всей информацией о клиенте,инстанс модели
-   * возвращает:инстанс измененный модели
-   */
-  async updateClient(clientObj, client) {
-    const clientInfo = await Client.getClientInfo(clientObj)
-    await client.update(clientInfo)
-    await client.updateClient(clientObj, client)
-    return client
-  }
-
 }
 
 module.exports = MainController
