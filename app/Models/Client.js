@@ -131,7 +131,7 @@ class Client extends Model {
       await this.fillRegAddress(obj.regAddress, this.regAddress())
     }
     if (obj.livingAddress) {
-      await this.fillLivAddress(obj.livingAddress, this.passport())
+      await this.fillLivAddress(obj.livingAddress, this.livingAddress())
     }
   }
 
