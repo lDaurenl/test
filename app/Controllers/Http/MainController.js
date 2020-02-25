@@ -44,9 +44,9 @@ class MainController extends BaseController {
   async destroy({ params }) {
     await this.validate(params, RudRules)
     const client = await Client.findOrFail(params.id)
-    client.spouse()
+    await client.spouse()
       .delete()
-    client.delete()
+    await client.delete()
     return 'удалено'
   }
 
@@ -56,7 +56,7 @@ class MainController extends BaseController {
     const client = await Client.findOrFail(params.id)
     await client.updateWithNesting(clientObj)
     const spouseObj = clientObj.spouse
-    const spouse=await client.updateSpouse(spouseObj)
+    const spouse = await client.updateSpouse(spouseObj)
     await client.reload()
     return transform.item(client, 'ClientTransformer')
   }

@@ -1,13 +1,17 @@
 'use strict'
-const Client = require('./exampleModels/Client')
+const requireClient = require('./exampleModels/Client')
 const responseClient = require('./exampleModels/responseClient')
+const Client = use('App/Models/Client')
+const Address = use('App/Models/Address')
+const Jobs=use('App/Models/Job')
+const Child=use('App/Models/Child')
 const Factory = use('Factory')
 const { test, trait } = use('Test/Suite')('Client Crud')
 
 trait('Test/ApiClient')
 
 test('CreateEmptyClient', async ({ client }) => {
-  const emptyClient = Client.ClientEmpty
+  const emptyClient = requireClient.ClientEmpty
   const response = await client.post('/client')
     .send(emptyClient)
     .end()
@@ -16,7 +20,7 @@ test('CreateEmptyClient', async ({ client }) => {
 })
 
 test('CreateClientWrongValidate', async ({ client }) => {
-  const ClientWrongValidate = Client.ClientWrongValidate
+  const ClientWrongValidate = requireClient.ClientWrongValidate
   const response = await client.post('/client')
     .send(ClientWrongValidate)
     .end()
@@ -25,7 +29,7 @@ test('CreateClientWrongValidate', async ({ client }) => {
 })
 
 test('ClientWithAddress', async ({ client }) => {
-  const ClientWithAddress = Client.ClientWithAddress
+  const ClientWithAddress = requireClient.ClientWithAddress
   const response = await client.post('/client')
     .send(ClientWithAddress)
     .end()
@@ -34,7 +38,7 @@ test('ClientWithAddress', async ({ client }) => {
 })
 
 test('ClientWithAddress', async ({ client }) => {
-  const ClientWithAddress = Client.ClientWithAddress
+  const ClientWithAddress = requireClient.ClientWithAddress
   const response = await client.post('/client')
     .send(ClientWithAddress)
     .end()
@@ -43,7 +47,7 @@ test('ClientWithAddress', async ({ client }) => {
 })
 
 test('ClientWithJobs', async ({ client }) => {
-  const ClientWithJobs = Client.ClientWithJobs
+  const ClientWithJobs = requireClient.ClientWithJobs
   const response = await client.post('/client')
     .send(ClientWithJobs)
     .end()
@@ -52,7 +56,7 @@ test('ClientWithJobs', async ({ client }) => {
 })
 
 test('ClientFull', async ({ client }) => {
-  const ClientFull = Client.ClientFull
+  const ClientFull = requireClient.ClientFull
   const response = await client.post('/client')
     .send(ClientFull)
     .end()
@@ -94,7 +98,7 @@ test('UpdateJobs', async ({ client }) => {
   const clientModel = await Factory.model('App/Models/Client')
     .create()
   const response = await client.patch(`client/${clientModel.id}`)
-    .send(Client.ClientWithJobs)
+    .send(requireClient.ClientWithJobs)
     .end()
   response.assertStatus(200)
   response.assertJSONSubset(responseClient.ClientWithJobs)
@@ -103,9 +107,76 @@ test('UpdateFull', async ({ client }) => {
   const clientModel = await Factory.model('App/Models/Client')
     .create()
   const response = await client.patch(`client/${clientModel.id}`)
-    .send(Client.ClientFull)
+    .send(requireClient.ClientFull)
     .end()
   response.assertStatus(200)
   response.assertJSONSubset(responseClient.ClientFull)
 })
+test('DeleteClient', async ({ client, assert }) => {
+  const clientModel = await Factory.model('App/Models/Client')
+    .create()
+  const response = await client.delete(`client/${clientModel.id}`)
+    .end()
+  const model = await Client.find(clientModel.id)
+  assert.equal(model, null)
+  response.assertStatus(200)
+  response.assertText('удалено')
+})
+test('DeleteWithAddress', async ({ client, assert }) => {
+  const clientModel = await Factory.model('App/Models/Client')
+    .create()
+  await clientModel.updateWithNesting(requireClient.ClientWithAddress.client)
+  let address = await clientModel.regAddress()
+    .fetch()
+  const response = await client.delete(`client/${clientModel.id}`)
+    .end()
+  const model = await Client.find(clientModel.id)
+  address = await Address.find(address.id)
+  assert.equal(model, null)
+  assert.equal(address, null)
+  response.assertStatus(200)
+  response.assertText('удалено')
+})
+test('DeleteFullNestedModel', async ({ client, assert }) => {
+  const clientModel = await Factory.model('App/Models/Client')
+    .create()
+  await clientModel.updateWithNesting(requireClient.ClientFull.client)
+  let children = await clientModel.children()
+    .load()
+  let jobs = await clientModel.jobs()
+    .load()
+  const response = await client.delete(`client/${clientModel.id}`)
+    .end()
+  await nestingIsEmpty(await getNestingModels(clientModel),assert)
+  await nestingManyIsEmpty(jobs['rows'],assert,Jobs)
+  await nestingManyIsEmpty(children['rows'],assert,Child)
+  response.assertStatus(200)
+  response.assertText('удалено')
+})
+
+async function nestingIsEmpty(nestedModels,assert) {
+  for (let model of nestedModels) {
+    if (model) {
+      model = await model.constructor.find(model.id)
+      assert.equal(model, null)
+    }
+  }
+}
+async function nestingManyIsEmpty(nestedModels,assert,constructor) {
+  for (let model of nestedModels) {
+    if (model) {
+      model = await constructor.find(model.id)
+      assert.equal(model, null)
+    }
+  }
+}
+async function getNestingModels(clientModel) {
+  let regAddress = await clientModel.regAddress()
+    .load()
+  let livingAddress = await clientModel.livingAddress()
+    .load()
+  let passport = await clientModel.passport()
+    .load()
+  return [regAddress,livingAddress, passport]
+}
 

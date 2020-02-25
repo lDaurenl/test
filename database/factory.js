@@ -18,6 +18,6 @@ Factory.blueprint('App/Models/Client', (faker) => {
   return {
     surname: faker.username,
     name: faker.username,
-    patronymic: faker.username
+    patronymic: faker.username,
   }
 })

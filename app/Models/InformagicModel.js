@@ -36,8 +36,19 @@ class InformagicModel extends Model {
   }
 
   async update(obj) {
-    this.merge(obj)
-   await this.save()
+    if (!InformagicModel.isDummy(obj)) {
+      this.merge(obj)
+      await this.save()
+    }
+  }
+//проверка на то,что объкт имеет хоть одно не пустое поле
+  static isDummy(obj) {
+    for (const key in obj) {
+      if (obj[key] !== undefined) {
+        return false
+      }
+    }
+    return true
   }
 }
 
