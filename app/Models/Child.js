@@ -45,7 +45,7 @@ class Child extends Model {
    */
   static async updateChildren(children,model) {
     if (children) {
-      model.children()
+      await model.children()
         .delete()
       await model.fillChildren(children)
     }

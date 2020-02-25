@@ -34,6 +34,11 @@ class InformagicModel extends Model {
     this.addHook('beforeCreate', 'UuidHook.uuid')
     this.addTrait('RulesValidate')
   }
+
+  async update(obj) {
+    this.merge(obj)
+   await this.save()
+  }
 }
 
 module.exports = InformagicModel

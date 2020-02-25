@@ -45,6 +45,7 @@ class Job extends Model {
   static getJobInfo(obj) {
     return this.getInfo(obj)
   }
+
   /**
    * принимает:массив с подготовленной информацией для создания
    * инстанса модели и клиента(инстанс модели) куда будут привязаны работы
@@ -55,32 +56,34 @@ class Job extends Model {
       await this.fillJob(jobObj, client)
     }
   }
-/**
- * принимает:обьект с информацией о работе
- * и инстанс модели клиента
- * делает:создает инстанс модели работы
- * с заполненной информацией
- */
+
+  /**
+   * принимает:обьект с информацией о работе
+   * и инстанс модели клиента
+   * делает:создает инстанс модели работы
+   * с заполненной информацией
+   */
   static async fillJob(jobObj, client) {
     let jobInfo = Job.getJobInfo(jobObj)
     let job = await client.jobs()
       .create(jobInfo)
     if (jobObj.address) {
-      await Address.fillAddress(job.address, job.address())
+      await Address.fillAddress(jobObj.address, job.address())
     }
     return job
   }
+
   /**
    * принимает:массив обьектов с  информацией для создания
    * инстанса модели и клиента куда будут привязаны работы
    * делает:удаляет старые работы,создает и  привязывает новые
    */
-  static async updateJobs(jobs,client) {
+  static async updateJobs(jobs, client) {
     if (jobs) {
-     await client.jobs()
+      await client.jobs()
         .delete()
-     await client.fillJobs(jobs)
     }
+    await client.fillJobs(jobs)
   }
 }
 

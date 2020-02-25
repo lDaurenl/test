@@ -3,8 +3,8 @@
 const JobModel = use('App/Models/Job');
 
 class JobController {
-  async index({response}) {
-    response.send(await JobModel.all());
+  async index({transform}) {
+    return transform.collection(await JobModel.all(),'JobsTransformer')
   }
 
   async store({request, response}) {

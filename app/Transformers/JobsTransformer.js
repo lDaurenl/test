@@ -25,12 +25,12 @@ class JobsTransformer extends BumblebeeTransformer {
       jobTitle: model.jobTitle,
       monIncome: model.monIncome,
       fioManager: model.fioManager,
-      address: model.address,
       site: model.site
     }
   }
-  includeAddress (client) {
-    return this.item(client.getRelated('address'),'PassportTransformer')
+
+  includeAddress(job) {
+    return this.item(job.getRelated('address'), 'AddressTransformer')
   }
 }
 

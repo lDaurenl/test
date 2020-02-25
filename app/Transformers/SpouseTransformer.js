@@ -1,8 +1,6 @@
 'use strict'
 
 const BumblebeeTransformer = use('Bumblebee/Transformer')
-const AddressTransformer = use('App/Transformers/AddressTransformer')
-
 
 /**
  * ClientTransformer class
@@ -11,7 +9,7 @@ const AddressTransformer = use('App/Transformers/AddressTransformer')
  * @constructor
  */
 class SpouseTransformer extends BumblebeeTransformer {
-  static get defaultInclude () {
+  static get defaultInclude() {
     return [
       'regAddress',
       'livingAddress',
@@ -47,20 +45,25 @@ class SpouseTransformer extends BumblebeeTransformer {
       communications: model.communications
     }
   }
-  includeRegAddress (client) {
-    return this.item(client.getRelated('regAddress'),'AddressTransformer')
+
+  includeRegAddress(client) {
+    return this.item(client.getRelated('regAddress'), 'AddressTransformer')
   }
-  includeLivingAddress (client) {
-    return this.item(client.getRelated('livingAddress'),'AddressTransformer')
+
+  includeLivingAddress(client) {
+    return this.item(client.getRelated('livingAddress'), 'AddressTransformer')
   }
-  includePassport (client) {
-    return this.item(client.getRelated('passport'),'PassportTransformer')
+
+  includePassport(client) {
+    return this.item(client.getRelated('passport'), 'PassportTransformer')
   }
-  includeChildren(client){
-    return this.collection(client.getRelated('children'),'ChildrenTransformer')
+
+  includeChildren(client) {
+    return this.collection(client.getRelated('children'), 'ChildrenTransformer')
   }
-  includeJobs(client){
-    return this.collection(client.getRelated('jobs'),'JobsTransformer')
+
+  includeJobs(client) {
+    return this.collection(client.getRelated('jobs'), 'JobsTransformer')
   }
 }
 

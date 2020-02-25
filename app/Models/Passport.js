@@ -17,6 +17,7 @@ class Passport extends Model {
   static getPassportInfo(obj) {
     return this.getInfo(obj)
   }
+
   /**
    * принимает:обьект с информацией о паспорте,инстанс модели клиента
    * и инстанс модели паспорта,если он есть
@@ -25,7 +26,7 @@ class Passport extends Model {
    */
   static async fillPassport(passport, model, client) {
     const passportObj = Passport.getPassportInfo(passport)
-    if (model) {
+    if (model && await model.load()) {
       await client.passport()
         .update(passportObj)
     } else {

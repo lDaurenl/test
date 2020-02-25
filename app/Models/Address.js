@@ -31,6 +31,7 @@ class Address extends Model {
   static getAddressInfo(obj) {
     return this.getInfo(obj)
   }
+
   /**
    * принимает:обьект со всей информацией о адресе,
    * отношение куда нужно добавить адрес
@@ -39,7 +40,7 @@ class Address extends Model {
    */
   static async fillAddress(obj, relationship, model) {
     let addressInfo = Address.getAddressInfo(obj)
-    if (model) {
+    if (model && await model.load()) {
       await relationship.update(addressInfo)
     } else {
       await relationship.create(addressInfo)

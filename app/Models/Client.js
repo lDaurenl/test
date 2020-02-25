@@ -122,36 +122,62 @@ class Client extends Model {
    * делает:изменяет модель клиенат по информации из объекта
    */
   async updateClient(obj) {
-    this.updateJobs(obj.jobs)
-    this.updateChildren(obj.children)
+    await this.updateJobs(obj.jobs)
+    await this.updateChildren(obj.children)
     if (obj.passport) {
-      this.fillPassport(obj.passport, this.passport())
+      await this.fillPassport(obj.passport, this.passport())
     }
     if (obj.regAddress) {
-      this.fillRegAddress(obj.regAddress, this.regAddress())
+      await this.fillRegAddress(obj.regAddress, this.regAddress())
     }
     if (obj.livingAddress) {
-      this.fillLivAddress(obj.livingAddress, this.passport())
+      await this.fillLivAddress(obj.livingAddress, this.passport())
     }
   }
-/**
- *принимает: объект со всей информацией
- * делает:заполняет все данные о клиенте
- * создает,заполняет и привязывает вложенные модели
- */
-  async fillClient(obj) {
-   await this.fillPassport(obj.passport)
-   await this.fillLivAddress(obj.livingAddress)
-   await this.fillJobs(obj.jobs)
-   await this.fillRegAddress(obj.regAddress)
-   await this.fillChildren(obj.children)
+  /**
+   * принимает:обьект со всей информацией о клиенте
+   * возвращает:новый инстанс заполненной модели
+   */
+  static async create(clientObj,trx) {
+    let clientInfo = await Client.getClientInfo(clientObj)
+    let client = await Client.create(clientInfo)
+    await client.fillClient(clientObj)
+    return client
   }
+
+  //обновление супруги
+  async updateSpouse(spouse) {
+    if (!spouse) return
+    if (await this.spouse()
+      .load()) {
+      spouse = await Client.updateClient(spouse)
+    } else {
+      spouse = await Client.createClient(spouse)
+    }
+    spouse.merge({ spouse: this.id })
+    await spouse.save()
+  }
+
+  /**
+   *принимает: объект со всей информацией
+   * делает:заполняет все данные о клиенте
+   * создает,заполняет и привязывает вложенные модели
+   */
+  async fillClient(obj) {
+    await this.fillPassport(obj.passport)
+    await this.fillLivAddress(obj.livingAddress)
+    await this.fillJobs(obj.jobs)
+    await this.fillRegAddress(obj.regAddress)
+    await this.fillChildren(obj.children)
+  }
+
+
   /**
    * сдеалано просто для удобства,
    * чтобы можно было вызыват медоты из инстанса объкета
    */
   async updateChildren(children) {
-    await Child.updateChildren(children,this)
+    await Child.updateChildren(children, this)
   }
 
   async updateJobs(jobs) {
@@ -159,28 +185,33 @@ class Client extends Model {
   }
 
   async fillPassport(passport, model) {
-    if(passport)
-    await Passport.fillPassport(passport, model, this)
+    if (passport) {
+      await Passport.fillPassport(passport, model, this)
+    }
   }
 
   async fillJobs(jobs) {
-    if(jobs)
-    await Job.fillJobs(jobs, this)
+    if (jobs) {
+      await Job.fillJobs(jobs, this)
+    }
   }
 
   async fillRegAddress(address, model) {
-    if(address)
-    await Address.fillAddress(address, this.regAddress(), model)
+    if (address) {
+      await Address.fillAddress(address, this.regAddress(), model)
+    }
   }
 
   async fillLivAddress(address, model) {
-    if(address)
-    await Address.fillAddress(address, this.livingAddress(), model)
+    if (address) {
+      await Address.fillAddress(address, this.livingAddress(), model)
+    }
   }
 
   async fillChildren(children) {
-    if(children)
-    await Child.fillChildren(children, this)
+    if (children) {
+      await Child.fillChildren(children, this)
+    }
   }
 
   static getClientInfo(obj) {
