@@ -7,10 +7,16 @@ const Exception = use('App/Exceptions/ValidationException')
 const BaseController = use('App/Controllers/Http/BaseController')
 
 const RudRules = { id: 'required|UUID' }
+const index = {
+  sortBy: 'string',
+  sortDir: 'sortDir',
+  page: 'number',
+  limit: 'number'
+}
 
 class MainController extends BaseController {
   async index({ request, transform }) {
-
+    await this.validate(request.all(), index)
     const sortBy = request.input('sortBy', 'created_at')
     const sortDir = request.input('sortDir', 'desc')
     const page = request.input('page', 1)
@@ -18,7 +24,15 @@ class MainController extends BaseController {
     const clients = await Client.query()
       .orderBy(sortBy, sortDir)
       .paginate(page, limit)
-    return transform.paginate(clients, 'ClientTransformer')
+    return this.paginateResponse(clients,transform)
+  }
+  async paginateResponse(clients,transform){
+    const paginate = await transform.paginate(clients, 'ClientTransformer')
+    for (const item in paginate.pagination) {
+      paginate[item] = paginate.pagination[item]
+    }
+    delete paginate.pagination
+    return paginate
   }
 
   async store({ request, transform }) {

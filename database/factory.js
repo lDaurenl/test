@@ -19,5 +19,6 @@ Factory.blueprint('App/Models/Client', (faker) => {
     surname: faker.username,
     name: faker.username,
     patronymic: faker.username,
+    monIncome: Math.floor(Math.random())
   }
 })

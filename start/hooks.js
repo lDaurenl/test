@@ -133,12 +133,17 @@ hooks.after.providersBooted(() => {
     if (!value) {
       return
     }
-    if (!Client.find(value)) {
+    if (!await Client.find(value)) {
       throw message
     }
   }
   const passport = async (data, field, message, args, get) => {
     return modelValidate(data, field, message, args, get, passportRules)
+  }
+  const sortDir=async (data, field, message, args, get)=>{
+    const value = get(data, field)
+    if(value!='desc'&&value!='asc'&&value!=null)
+      throw message
   }
 
 
@@ -156,4 +161,5 @@ hooks.after.providersBooted(() => {
   Validator.extend('existClient', existClient)
   Validator.extend('UUID', UUIDv4)
   Validator.extend('communications',communications)
+  Validator.extend('sortDir',sortDir)
 })

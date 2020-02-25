@@ -3,8 +3,8 @@ const requireClient = require('./exampleModels/Client')
 const responseClient = require('./exampleModels/responseClient')
 const Client = use('App/Models/Client')
 const Address = use('App/Models/Address')
-const Jobs=use('App/Models/Job')
-const Child=use('App/Models/Child')
+const Jobs = use('App/Models/Job')
+const Child = use('App/Models/Child')
 const Factory = use('Factory')
 const { test, trait } = use('Test/Suite')('Client Crud')
 
@@ -147,14 +147,65 @@ test('DeleteFullNestedModel', async ({ client, assert }) => {
     .load()
   const response = await client.delete(`client/${clientModel.id}`)
     .end()
-  await nestingIsEmpty(await getNestingModels(clientModel),assert)
-  await nestingManyIsEmpty(jobs['rows'],assert,Jobs)
-  await nestingManyIsEmpty(children['rows'],assert,Child)
+  await nestingIsEmpty(await getNestingModels(clientModel), assert)
+  await nestingManyIsEmpty(jobs['rows'], assert, Jobs)
+  await nestingManyIsEmpty(children['rows'], assert, Child)
   response.assertStatus(200)
   response.assertText('удалено')
 })
+test('getOnePage', async ({ client }) => {
+  await Factory.model('App/Models/Client')
+    .createMany(10)
+  const response = await client.get('/client')
+    .end()
+  response.assertStatus(200)
+  response.assertJSONSubset({ page: 1 })
+})
+test('getWrongValidation', async ({ client }) => {
+  await Factory.model('App/Models/Client')
+    .createMany(10)
+  const response = await client.get('/client')
+    .send({ page: 'sdasd' })
+    .end()
+  response.assertStatus(400)
+  response.assertJSONSubset({
+    code: 400,
+    key: 'E_VALIDATION_FAILED'
+  })
+})
+test('getPage', async ({ client }) => {
+  await Factory.model('App/Models/Client')
+    .createMany(10)
+  const response = await client.get('/client')
+    .send({ page: 2 })
+    .end()
+  response.assertStatus(200)
+  response.assertJSONSubset({ page: 2 })
+})
+test('getOrder', async ({ client, assert }) => {
+  await Factory.model('App/Models/Client')
+    .createMany(10)
+  const response = await client.get('/client')
+    .send({
+      page: 2,
+      sortBy: 'monIncome',
+      sortDir: 'asc',
+      limit: 4
+    })
+    .end()
+  response.assertStatus(200)
+  response.assertJSONSubset({
+    page: 2,
+    perPage: 4
+  })
+  const body = response.body
+  for (let i = 0; i < 3; i++) {
+    if(body[i]&&body[i+1])
+    assert.equal('true', body[i] > body[i + 1])
+  }
+})
 
-async function nestingIsEmpty(nestedModels,assert) {
+async function nestingIsEmpty(nestedModels, assert) {
   for (let model of nestedModels) {
     if (model) {
       model = await model.constructor.find(model.id)
@@ -162,7 +213,8 @@ async function nestingIsEmpty(nestedModels,assert) {
     }
   }
 }
-async function nestingManyIsEmpty(nestedModels,assert,constructor) {
+
+async function nestingManyIsEmpty(nestedModels, assert, constructor) {
   for (let model of nestedModels) {
     if (model) {
       model = await constructor.find(model.id)
@@ -170,6 +222,7 @@ async function nestingManyIsEmpty(nestedModels,assert,constructor) {
     }
   }
 }
+
 async function getNestingModels(clientModel) {
   let regAddress = await clientModel.regAddress()
     .load()
@@ -177,6 +230,6 @@ async function getNestingModels(clientModel) {
     .load()
   let passport = await clientModel.passport()
     .load()
-  return [regAddress,livingAddress, passport]
+  return [regAddress, livingAddress, passport]
 }
 
