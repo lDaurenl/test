@@ -29,9 +29,10 @@ class Child extends Model {
     return this.getInfo(obj)
   }
   /**
-   * принимает:массив с подготовленной информацией для создания
-   * инстанса модели и клиента(инстанс модели) куда будут привязаны дети
+   * @param children - массив с подготовленной информацией для создания инстанса
+   * @param client - инстанс модели,куда будет привязано
    * делает:создает и привязывает детей к клиенту
+   * @returns {Promise<void>}
    */
   static async fillChildren(children,client) {
     const childrenObj = Child.getChildrenInfo(children)
@@ -39,9 +40,10 @@ class Child extends Model {
       .createMany(childrenObj)
   }
   /**
-   * принимает:массив обьектов с  информацией для создания
-   * инстанса модели и клиента куда будут привязаны дети
-   * делает:удаляет старых детей,создает и привязывает новых
+   * @param children - массив с подготовленной информацией для создания инстанса
+   * @param client - инстанс модели,куда будет привязано
+   * делает:создает и привязывает детей к клиенту и удяляет старых
+   * @returns {Promise<void>}
    */
   static async updateChildren(children,model) {
     if (children) {
