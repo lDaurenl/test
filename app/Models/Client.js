@@ -118,8 +118,10 @@ class Client extends Model {
   }
 
   /**
-   * принимает:обьект со всей информацией о клиенте
+   *
+   * @param obj-обьект со всей информацией о клиенте
    * делает:изменяет вложенные модели
+   * @returns {Promise<void>}
    */
   async updateNestedModels(obj) {
     await this.updateJobs(obj.jobs)
@@ -136,8 +138,8 @@ class Client extends Model {
   }
 
   /**
-   * принимает:обьект со всей информацией о клиенте
-   * возвращает:новый инстанс заполненной модели
+   * @param clientObj-обьект со всей информацией о клиенте
+   * @returns {Promise<*>}-новый инстанс заполненной модели
    */
   static async createWithNesting(clientObj) {
     let clientInfo = await Client.getClientInfo(clientObj)
@@ -146,10 +148,15 @@ class Client extends Model {
     return client
   }
 
-  //обновление супруги
+  /**
+   * @param spouse - объект со всеми даннами о супрге
+   * делает: обновляет супругу
+   * @returns {Promise<void>}
+   */
   async updateSpouse(spouse) {
     if (!spouse) return
-    if (await this.spouse().load()) {
+    if (await this.spouse()
+      .load()) {
       spouse = await this.updateWithNesting(spouse)
     } else {
       spouse = await Client.createWithNesting(spouse)
@@ -159,8 +166,8 @@ class Client extends Model {
   }
 
   /**
-   * принимает:обьект со всей информацией о клиенте,инстанс модели
-   * возвращает:инстанс измененный модели
+   * @param clientObj
+   * @returns {Promise<Client>} -обьект со всей информацией о клиенте,инстанс модели
    */
   async updateWithNesting(clientObj) {
     const clientInfo = await Client.getClientInfo(clientObj)
@@ -170,7 +177,7 @@ class Client extends Model {
   }
 
   /**
-   *принимает: объект со всей информацией
+   *@param: obj - объект со всей информацией
    * делает:заполняет все данные о клиенте
    * создает,заполняет и привязывает вложенные модели
    */
@@ -182,13 +189,20 @@ class Client extends Model {
     await this.fillChildren(obj.children)
   }
 
-async createSpouse(spouseObj){
-  if (spouseObj) {
-    const spouse = await Client.createWithNesting(spouseObj)
-    spouse.merge({ spouse: this.id })
-    await spouse.save()
+  /**
+   *
+   * @param spouseObj - объект с данными о супруге
+   * выполняет:создает супругу
+   * @returns {Promise<void>}
+   */
+  async createSpouse(spouseObj) {
+    if (spouseObj) {
+      const spouse = await Client.createWithNesting(spouseObj)
+      spouse.merge({ spouse: this.id })
+      await spouse.save()
+    }
   }
-}
+
   /**
    * сдеалано просто для удобства,
    * чтобы можно было вызыват медоты из инстанса объкета
