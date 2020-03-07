@@ -13,6 +13,7 @@ class Child extends Model {
       'dob'
     ]
   }
+
   /**
    * @param children-обьект со всей информацией о детях
    * @returns {[]}-массив объектов готовых для создания по ним модели
@@ -28,24 +29,26 @@ class Child extends Model {
   static getChildInfo(obj) {
     return this.getInfo(obj)
   }
+
   /**
    * @param children - массив с подготовленной информацией для создания инстанса
    * @param client - инстанс модели,куда будет привязано
    * делает:создает и привязывает детей к клиенту
    * @returns {Promise<void>}
    */
-  static async fillChildren(children,client) {
+  static async fillChildren(children, client) {
     const childrenObj = Child.getChildrenInfo(children)
     await client.children()
       .createMany(childrenObj)
   }
+
   /**
    * @param children - массив с подготовленной информацией для создания инстанса
    * @param client - инстанс модели,куда будет привязано
    * делает:создает и привязывает детей к клиенту и удяляет старых
    * @returns {Promise<void>}
    */
-  static async updateChildren(children,model) {
+  static async updateChildren(children, model) {
     if (children) {
       await model.children()
         .delete()

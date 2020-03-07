@@ -15,7 +15,11 @@ class InformagicModel extends Model {
     throw new Error(`вы не переопределили getInputProperties для модели: ${this.toString()}`)
   }
 
-  //метод который возвращает обьект с вводимыми полями
+  /**
+   *
+   * @param obj - обект с данными
+   * @returns {{}} - обьект с полями для заполнения модели
+   */
   static getInfo(obj) {
     const model = {}
     for (let key of this.getInputProperties()) {
@@ -26,19 +30,29 @@ class InformagicModel extends Model {
 
   static boot() {
     super.boot()
-    //хук для генерации uuid и трейт,
     // чтобы можно было корректно валидировать модели
-    this.addHook('beforeCreate', 'UuidHook.uuid')
     this.addTrait('RulesValidate')
   }
 
+  /**
+   *
+   * @param obj - обьект с информацией для адейте
+   * делает:обновляет инстанс
+   * @returns {Promise<void>}
+   */
   async update(obj) {
     if (!InformagicModel.isDummy(obj)) {
       this.merge(obj)
       await this.save()
     }
   }
-//проверка на то,что объкт имеет хоть одно не пустое поле
+
+  /**
+   *
+   * @param obj - обьект для проверки
+   * делает:проверяет,что есть хоть одно не пустое поле
+   * @returns {boolean}
+   */
   static isDummy(obj) {
     for (const key in obj) {
       if (obj[key] !== undefined) {
