@@ -182,7 +182,13 @@ class Client extends Model {
     await this.fillChildren(obj.children)
   }
 
-
+async createSpouse(spouseObj){
+  if (spouseObj) {
+    const spouse = await Client.createWithNesting(spouseObj)
+    spouse.merge({ spouse: this.id })
+    await spouse.save()
+  }
+}
   /**
    * сдеалано просто для удобства,
    * чтобы можно было вызыват медоты из инстанса объкета

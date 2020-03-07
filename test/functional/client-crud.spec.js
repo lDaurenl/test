@@ -120,7 +120,7 @@ test('DeleteClient', async ({ client, assert }) => {
   const model = await Client.find(clientModel.id)
   assert.equal(model, null)
   response.assertStatus(200)
-  response.assertText('удалено')
+  response.assertText('Данные клиента успешно удалены')
 })
 test('DeleteWithAddress', async ({ client, assert }) => {
   const clientModel = await Factory.model('App/Models/Client')
@@ -135,7 +135,7 @@ test('DeleteWithAddress', async ({ client, assert }) => {
   assert.equal(model, null)
   assert.equal(address, null)
   response.assertStatus(200)
-  response.assertText('удалено')
+  response.assertText('Данные клиента успешно удалены')
 })
 test('DeleteFullNestedModel', async ({ client, assert }) => {
   const clientModel = await Factory.model('App/Models/Client')
@@ -151,7 +151,7 @@ test('DeleteFullNestedModel', async ({ client, assert }) => {
   await nestingManyIsEmpty(jobs['rows'], assert, Jobs)
   await nestingManyIsEmpty(children['rows'], assert, Child)
   response.assertStatus(200)
-  response.assertText('удалено')
+  response.assertText('Данные клиента успешно удалены')
 })
 test('getOnePage', async ({ client }) => {
   await Factory.model('App/Models/Client')
