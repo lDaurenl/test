@@ -149,8 +149,7 @@ class Client extends Model {
   //обновление супруги
   async updateSpouse(spouse) {
     if (!spouse) return
-    if (await this.spouse()
-      .load()) {
+    if (await this.spouse().load()) {
       spouse = await this.updateWithNesting(spouse)
     } else {
       spouse = await Client.createWithNesting(spouse)

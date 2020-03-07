@@ -7,13 +7,13 @@ const type = Address.getType()
 
 class AddressClientSchema extends Schema {
   up() {
-    this.createExtensionIfNotExists('uuid-ossp');
+    this.createExtensionIfNotExists('pgcrypto')
 
     this.create('address', (table) => {
       table.uuid('id')
         .primary()
         .unique()
-        // .defaultTo(this.db.raw('public.gen_random_uuid()'))
+        .defaultTo(this.db.raw('public.gen_random_uuid()'))
       table.string('country')
       table.string('zipCode')
       table.string('region')

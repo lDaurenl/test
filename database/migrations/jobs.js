@@ -9,11 +9,11 @@ class JobsSchema extends Schema {
 
 
     this.create('jobs', (table) => {
-      this.createExtensionIfNotExists('uuid-ossp')
+      this.createExtensionIfNotExists('pgcrypto')
 
       table.uuid('id')
         .unique()
-        // .defaultTo(this.db.raw('public.gen_random_uuid()'))
+        .defaultTo(this.db.raw('public.gen_random_uuid()'))
       table.enu(TypesWork.Signature, TypesWork.ArrayTypes)
       table.date('dateEmp')
       table.date('dateDismissal')

@@ -4,9 +4,6 @@ const Model = use('Model')
 
 // модель от которой унаследованны все модели пакета
 class InformagicModel extends Model {
-  static get incrementing() {
-    return false
-  }
 
   static get primaryKey() {
     return 'id'

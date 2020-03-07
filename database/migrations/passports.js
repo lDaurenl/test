@@ -7,13 +7,13 @@ class PassportsSchema extends Schema {
   up() {
 
     this.create('passports', (table) => {
-      this.createExtensionIfNotExists('uuid-ossp')
+      this.createExtensionIfNotExists('pgcrypto')
 
 
       table.uuid('id')
         .primary()
         .unique()
-        // .defaultTo(this.db.raw('public.gen_random_uuid()'))
+        .defaultTo(this.db.raw('public.gen_random_uuid()'))
       table.string('series')
       table.string('number')
       table.string('giver')

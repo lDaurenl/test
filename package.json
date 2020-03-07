@@ -30,6 +30,7 @@
     "@adonisjs/vow": "^1.0.17",
     "adonis-bumblebee": "^2.1.0",
     "adonis-lucid-polymorphic": "^1.0.1",
+    "nats": "^1.4.2",
     "pg": "^7.18.1",
     "sqlite3": "^4.1.1"
   },
