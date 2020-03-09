@@ -1,12 +1,10 @@
 'use strict'
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Client = use('App/Models/Client')
-const { validate } = use('Validator')
-const Exception = use('App/Exceptions/ValidationException')
+const Client = use('Informagic/Clients/Client')
 const BaseController = use('App/Controllers/Http/BaseController')
-const NATS = require('nats')
-const nc = NATS.connect({ json: true })
+// const NATS = require('nats')
+// const nc = NATS.connect({ json: true })
 
 class MainController extends BaseController {
   async index({ request, transform }) {
@@ -37,7 +35,7 @@ class MainController extends BaseController {
     await client.reload()
     await client.createSpouse(clientObj.spouse)
     const message =await transform.item(client, 'ClientTransformer')
-    nc.publish('clientCreated',message)
+    // nc.publish('clientCreated',message)
     return message;
 
   }
@@ -51,7 +49,7 @@ class MainController extends BaseController {
   async destroy({ params }) {
     await this.validate(params)
     const client = await Client.findOrFail(params.id)
-    nc.publish('deletedClient',{idClient:client.id})
+    // nc.publish('deletedClient',{idClient:client.id})
     await client.spouse()
       .delete()
     await client.delete()
@@ -60,14 +58,14 @@ class MainController extends BaseController {
 
   async update({ request, params, transform }) {
     await this.validate(params)
-    const clientObj = request.input('client')
+    const clientObj =request.input('client')
     const client = await Client.findOrFail(params.id)
     await client.updateWithNesting(clientObj)
     const spouseObj = clientObj.spouse
     const spouse = await client.updateSpouse(spouseObj)
     await client.reload()
     const message=await transform.item(client, 'ClientTransformer')
-    nc.publish('updatedClient',message);
+    // nc.publish('updatedClient',message);
     return message;
   }
 }

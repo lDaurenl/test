@@ -21,7 +21,8 @@ const providers = [
   'adonis-lucid-polymorphic/providers/PolymorphicProvider',
   '@adonisjs/validator/providers/ValidatorProvider',
   'adonis-bumblebee/providers/BumblebeeProvider',
-  '@adonisjs/auth/providers/AuthProvider'
+  '@adonisjs/auth/providers/AuthProvider',
+  'InformagicClient/providers/ModelsProvider'
 ]
 
 /*

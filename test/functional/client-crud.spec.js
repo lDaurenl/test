@@ -89,7 +89,6 @@ test('UpdateSurname', async ({ client }) => {
   const response = await client.patch(`client/${clientModel.id}`)
     .send({ client: { surname: 'Даурен' } })
     .end()
-  response.assertStatus(200)
   response.assertJSONSubset({
     surname: 'Даурен'
   })
