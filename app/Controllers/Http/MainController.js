@@ -1,7 +1,7 @@
 'use strict'
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Client = use('Informagic/Clients/Client')
+const Client = use('Clients/Models/Client')
 const BaseController = use('App/Controllers/Http/BaseController')
 // const NATS = require('nats')
 // const nc = NATS.connect({ json: true })
