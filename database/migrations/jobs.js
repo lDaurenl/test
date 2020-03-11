@@ -1,7 +1,7 @@
 'use strict'
 
 const Schema = use('Schema')
-const JobModel = use('App/Models/Job')
+const JobModel = use('Clients/Models/Job')
 const TypesWork = JobModel.getTypesWork()
 
 class JobsSchema extends Schema {

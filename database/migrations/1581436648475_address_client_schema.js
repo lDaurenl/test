@@ -2,7 +2,7 @@
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
-const Address = use('App/Models/Address')
+const Address = use('Clients/Models/Address')
 const type = Address.getType()
 
 class AddressClientSchema extends Schema {

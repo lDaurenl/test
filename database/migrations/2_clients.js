@@ -2,7 +2,7 @@
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
-const ClientModel = use('App/Models/Client')
+const ClientModel = use('Clients/Models/Client')
 
 const Statuses = ClientModel.getStatuses()
 const TypesEducation = ClientModel.getTypesEducation()

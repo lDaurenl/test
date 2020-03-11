@@ -2,11 +2,11 @@ const { hooks } = require('@adonisjs/ignitor')
 
 hooks.after.providersBooted(() => {
   const Validator = use('Validator')
-  const Client = use('App/Models/Client')
-  const Job = use('App/Models/Job')
-  const Address = use('App/Models/Address')
-  const Child = use('App/Models/Child')
-  const Passport = use('App/Models/Passport')
+  const Client = use('Clients/Models/Client')
+  const Job = use('Clients/Models/Job')
+  const Address = use('Clients/Models/Address')
+  const Child = use('Clients/Models/Child')
+  const Passport = use('Clients/Models/Passport')
 
   const addressRules = Address.getRulesValidate()
   const childRules = Child.getRulesValidate()
