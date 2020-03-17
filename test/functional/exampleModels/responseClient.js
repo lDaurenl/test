@@ -66,7 +66,7 @@ response = {
   },
   ClientWithAddress: {
     'regAddress': {
-      'country': null,
+      'country': 'Russia',
       'zipCode': '454084',
       'region': 'Саратовская область',
       'city': 'Саратов',
@@ -80,7 +80,7 @@ response = {
     'jobs': [
       {
         'address': {
-          'country': null,
+          'country': 'Russia',
           'zipCode': '454084',
           'region': 'Саратовская область',
           'city': 'Саратов',
@@ -103,7 +103,7 @@ response = {
   },
   ClientFull:{
     "regAddress": {
-      "country": null,
+      "country": 'Russia',
       "zipCode": "454084",
       "region": "Саратовская область",
       "city": "Саратов",
@@ -113,7 +113,7 @@ response = {
       "apartment": "101a"
     },
     "livingAddress": {
-      "country": null,
+      "country": 'Russia',
       "zipCode": "454084",
       "region": "Саратовская область",
       "city": "Саратов",
@@ -167,7 +167,7 @@ response = {
       },
       {
         "address": {
-          "country": null,
+          "country": 'Russia',
           "zipCode": "454084",
           "region": "Саратовская область",
           "city": "Саратов",
@@ -189,7 +189,7 @@ response = {
     ],
     "spouse": {
       "regAddress": {
-        "country": null,
+        "country": 'Russia',
         "zipCode": "454084",
         "region": "Саратовская область",
         "city": "Саратов",
@@ -199,7 +199,7 @@ response = {
         "apartment": "101a"
       },
       "livingAddress": {
-        "country": null,
+        "country": 'Russia',
         "zipCode": "454084",
         "region": "Саратовская область",
         "city": "Саратов",
@@ -253,7 +253,7 @@ response = {
         },
         {
           "address": {
-            "country": null,
+            "country": 'Russia',
             "zipCode": "454084",
             "region": "Саратовская область",
             "city": "Саратов",
